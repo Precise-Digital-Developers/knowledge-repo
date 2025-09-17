@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Article Viewer</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5.2.0/github-markdown.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="index.html" class="back-link">← Back to Articles</a>
+            <div class="view-options">
+                <button onclick="printArticle()" class="btn btn-secondary">🖨️ Print</button>
+                <button onclick="toggleTheme()" class="btn btn-secondary">🌓 Theme</button>
+            </div>
+        </header>
+        
+        <article id="content" class="markdown-body">
+            <div class="loading">Loading article...</div>
+        </article>
+    </div>
+
+    <script>
+        const GITHUB_REPO = 'Precise-Digital-Developers/knowledge-repo';
+        const GITHUB_BRANCH = 'main';
+        
+        mermaid.initialize({ 
+            startOnLoad: true,
+            theme: 'default'
+        });
+        
+        async function loadArticle() {
+            const params = new URLSearchParams(window.location.search);
+            const articleName = params.get('article');
+            
+            if (!articleName) {
+                document.getElementById('content').innerHTML = 
+                    '<p class="error">No article specified.</p>';
+                return;
+            }
+            
+            try {
+                const response = await fetch(
+                    `https://raw.githubusercontent.com/${GITHUB_REPO}/${GITHUB_BRANCH}/articles/${articleName}`
+                );
+                
+                if (!response.ok) {
+                    throw new Error('Article not found');
+                }
+                
+                const markdown = await response.text();
+                renderMarkdown(markdown, articleName);
+            } catch (error) {
+                console.error('Error loading article:', error);
+                document.getElementById('content').innerHTML = 
+                    '<p class="error">Error loading article. Please try again later.</p>';
+            }
+        }
+        
+        function renderMarkdown(markdown, filename) {
+            marked.setOptions({
+                breaks: true,
+                gfm: true,
+                headerIds: true,
+                highlight: function(code, lang) {
+                    if (Prism.languages[lang]) {
+                        return Prism.highlight(code, Prism.languages[lang], lang);
+                    }
+                    return code;
+                }
+            });
+            
+            const frontmatterRegex = /^---\n[\s\S]*?\n---\n/;
+            const cleanMarkdown = markdown.replace(frontmatterRegex, '');
+            
+            let html = marked.parse(cleanMarkdown);
+            
+            const title = filename
+                .replace(/\.(md|qmd)$/, '')
+                .replace(/-/g, ' ')
+                .replace(/_/g, ' ')
+                .replace(/\b\w/g, l => l.toUpperCase());
+            
+            document.title = `${title} - Knowledge Repository`;
+            
+            html = html.replace(/```mermaid([\s\S]*?)```/g, (match, code) => {
+                const id = 'mermaid-' + Math.random().toString(36).substr(2, 9);
+                return `<div class="mermaid" id="${id}">${code.trim()}</div>`;
+            });
+            
+            document.getElementById('content').innerHTML = html;
+            mermaid.run();
+        }
+        
+        function printArticle() {
+            window.print();
+        }
+        
+        function toggleTheme() {
+            document.body.classList.toggle('dark-theme');
+            localStorage.setItem('theme', 
+                document.body.classList.contains('dark-theme') ? 'dark' : 'light'
+            );
+        }
+        
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark-theme');
+        }
+        
+        loadArticle();
+    </script>
+</body>
+</html>

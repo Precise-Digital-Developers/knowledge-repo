@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Knowledge Repository</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📚 Knowledge Repository</h1>
+            <p>Our team's documentation and articles</p>
+        </header>
+        
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Search articles..." />
+        </div>
+
+        <main id="articleList" class="article-list">
+            <div class="loading">Loading articles...</div>
+        </main>
+    </div>
+
+    <script>
+        const GITHUB_REPO = 'Precise-Digital-Developers/knowledge-repo';
+        const GITHUB_BRANCH = 'main';
+        
+        async function loadArticles() {
+            try {
+                const response = await fetch(
+                    `https://api.github.com/repos/${GITHUB_REPO}/contents/articles?ref=${GITHUB_BRANCH}`
+                );
+                
+                if (!response.ok) {
+                    throw new Error('Failed to fetch articles');
+                }
+                
+                const files = await response.json();
+                const articles = files.filter(file => 
+                    file.name.endsWith('.md') || file.name.endsWith('.qmd')
+                );
+                
+                displayArticles(articles);
+            } catch (error) {
+                console.error('Error loading articles:', error);
+                document.getElementById('articleList').innerHTML = 
+                    '<p class="error">Error loading articles. Please try again later.</p>';
+            }
+        }
+        
+        function displayArticles(articles) {
+            const listContainer = document.getElementById('articleList');
+            
+            if (articles.length === 0) {
+                listContainer.innerHTML = '<p>No articles found.</p>';
+                return;
+            }
+            
+            const articlesHTML = articles.map(article => {
+                const title = formatTitle(article.name);
+                const viewUrl = `view.html?article=${encodeURIComponent(article.name)}`;
+                const githubUrl = article.html_url;
+                const downloadUrl = article.download_url;
+                
+                return `
+                    <div class="article-card" data-title="${title.toLowerCase()}">
+                        <h3>${title}</h3>
+                        <div class="article-meta">
+                            <span class="file-type">${article.name.endsWith('.qmd') ? 'Quarto' : 'Markdown'}</span>
+                            <span class="file-size">${formatFileSize(article.size)}</span>
+                        </div>
+                        <div class="article-actions">
+                            <a href="${viewUrl}" class="btn btn-primary">📖 View</a>
+                            <a href="${downloadUrl}" download class="btn btn-secondary">⬇️ Download</a>
+                            <a href="${githubUrl}" target="_blank" class="btn btn-secondary">🔗 GitHub</a>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            listContainer.innerHTML = articlesHTML;
+        }
+        
+        function formatTitle(filename) {
+            return filename
+                .replace(/\.(md|qmd)$/, '')
+                .replace(/-/g, ' ')
+                .replace(/_/g, ' ')
+                .replace(/\b\w/g, l => l.toUpperCase());
+        }
+        
+        function formatFileSize(bytes) {
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+            return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+        }
+        
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const cards = document.querySelectorAll('.article-card');
+            
+            cards.forEach(card => {
+                const title = card.dataset.title;
+                if (title.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+        
+        loadArticles();
+    </script>
+</body>
+</html>
