@@ -1,0 +1,502 @@
+---
+title: "Precise Digital Technology Stack"
+subtitle: "Infrastructure Documentation"
+author: "Cesaire Tobias"
+date: "2025-05-09"
+format:
+  html:
+    theme: lux
+    toc: true
+    toc-depth: 3
+    toc-title: "Contents"
+    toc-location: left
+    code-fold: true
+    footnotes-hover: true
+    fontsize: 1.1em
+    mainfont: 'Nunito Sans, sans-serif'
+    monofont: 'Fira Mono, monospace'
+    highlight-style: github
+    number-sections: true
+    fig-align: center
+    link-external-newwindow: true
+    smooth-scroll: true
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+library(kableExtra)
+library(DiagrammeR)
+library(htmlwidgets)
+```
+
+# Executive Summary
+
+This document provides an overview of Precise Digital's current technology infrastructure. Our technology ecosystem has evolved to support independent artists and labels through digital distribution, royalty management, and data analytics services.
+
+# Current Technology Stack
+
+Our current technology stack spans multiple domains, from core business operations to specialized music distribution tools.
+
+## Core Business Infrastructure
+
+```{r core-infrastructure, echo=FALSE}
+core_infra <- data.frame(
+  Technology = c("Google Workspace", "Slack", "GitHub", "Jira", "R", "Python", "Node.js", "Markdown"),
+  Category = c("Business Operations", "Team Communication", "Development & Version Control", "Project Management", "Data Analysis", "Development & Automation", "Backend Development", "Documentation"),
+  Description = c("Comprehensive suite providing email, document management, calendar, and collaboration tools", 
+                  "Real-time messaging platform for team communication, file sharing, and integration with development tools",
+                  "Code repository and version control system for technical development", 
+                  "Issue tracking and project management for development and operational workflows", 
+                  "Statistical computing environment used for data analysis and reporting", 
+                  "General-purpose programming language used for automation and backend processes",
+                  "JavaScript runtime environment for building server-side applications and APIs",
+                  "Lightweight markup language used for documentation, README files, and knowledge management")
+)
+
+kable(core_infra, caption = "Core Business Infrastructure") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), font_size = 12, full_width = TRUE) %>%
+  column_spec(1, bold = TRUE, color = "#e4002b")
+```
+
+### Google Workspace
+
+Google Workspace serves as the foundation of our daily operations, providing essential tools for communication and collaboration. Key components include:
+
+-   **Gmail**: Primary email service
+-   **Google Drive**: Document storage and sharing
+-   **Google Docs/Sheets**: Collaborative document editing
+-   **Google Meet**: Virtual meeting platform
+-   **Google Calendar**: Scheduling and time management
+
+The integration between these services creates a seamless workflow for our team.
+
+### Team Communication
+
+-   **Slack**: Our primary platform for real-time team communication, featuring:
+    -   Channel-based organization for projects and topics
+    -   Direct messaging and group conversations
+    -   File sharing and collaborative editing
+    -   Integration with GitHub, Jira, and other development tools
+    -   Custom workflows and automation through Slack apps
+    -   Voice and video calling capabilities
+
+### Development Environment
+
+Our technical development relies on several key tools:
+
+-   **GitHub**: Repository for code storage, version control, and collaborative development
+-   **R**: Statistical computing environment used for data analysis
+-   **Python**: General-purpose programming used for automation and data processing
+-   **Node.js**: JavaScript runtime environment for building server-side applications and APIs
+-   **JavaScript**: Client-side and server-side programming language for web applications
+-   **HTML/CSS**: Foundation technologies for web interface development
+-   **Markdown**: Documentation standard for README files, technical docs, and knowledge articles
+-   **Jira**: Issue tracking and project management for development workflows
+
+These tools form the foundation of our technical operations, allowing for efficient development and maintenance of our custom systems.
+
+## Web Technologies & Frontend Development
+
+```{r web-technologies, echo=FALSE}
+web_tech <- data.frame(
+  Technology = c("JavaScript", "HTML5", "CSS3", "Express.js", "Chart.js", "Markdown", "QMD (Quarto)"),
+  Category = c("Programming Language", "Markup Language", "Styling Language", "API Framework", "Data Visualization", "Documentation Format", "Advanced Documentation"),
+  Description = c("Core programming language for both client-side interactivity and server-side Node.js applications",
+                  "Latest HTML standard for structuring web content with semantic elements and multimedia support",
+                  "Modern CSS with animations, flexbox, grid layouts, and responsive design capabilities",
+                  "Node.js web application framework for building APIs and web services",
+                  "JavaScript library for creating responsive, interactive charts and data visualizations",
+                  "Lightweight markup language for creating formatted documentation with plain text",
+                  "Quarto Markdown for scientific and technical publishing with embedded R/Python code")
+)
+
+kable(web_tech, caption = "Web Technologies & Frontend Development") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), font_size = 12, full_width = TRUE) %>%
+  column_spec(1, bold = TRUE, color = "#e4002b")
+```
+
+### Frontend Technologies
+
+Our web development stack includes:
+
+-   **HTML5**: Semantic markup for structured content, utilizing modern elements for accessibility and SEO
+-   **CSS3**: Advanced styling with CSS Grid, Flexbox, custom properties, and responsive design patterns
+-   **JavaScript**: ES6+ features for modern web applications, including async/await, modules, and arrow functions
+
+### Documentation Standards
+
+-   **Markdown**: Primary format for technical documentation, featuring:
+    -   GitHub-flavored Markdown for enhanced formatting
+    -   Integration with version control systems
+    -   Easy conversion to HTML, PDF, and other formats
+    -   Support for code blocks with syntax highlighting
+    
+-   **QMD (Quarto Markdown)**: Advanced documentation for data-driven reports:
+    -   Embedded R and Python code execution
+    -   Interactive visualizations and tables
+    -   Multi-format output (HTML, PDF, Word)
+    -   Academic and technical publishing capabilities
+
+## Music Distribution Infrastructure
+
+```{r distribution-infra, echo=FALSE}
+distribution_infra <- data.frame(
+  Technology = c("Audio Salad", "Curve", "rowZero", "Internal APIs", "Express.js"),
+  Category = c("Digital Distribution", "Royalty Management", "Analytics", "Integration", "API Framework"),
+  Description = c("Digital distribution platform for delivering music to DSPs", 
+                  "Royalty calculation system", 
+                  "Large file data analytics platform", 
+                  "Custom-built APIs for internal system integration",
+                  "Node.js web application framework for building APIs")
+)
+
+kable(distribution_infra, caption = "Music Distribution Infrastructure") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), font_size = 12, full_width = TRUE) %>%
+  column_spec(1, bold = TRUE, color = "#e4002b")
+```
+
+### Distribution & Delivery Systems
+
+The core of our music delivery infrastructure includes:
+
+-   **Audio Salad**: Primary distribution platform for delivering music to streaming services and digital stores. This platform handles metadata management, asset delivery, and catalog management.
+
+-   **Custom Integrations**: We've developed several custom integrations to enhance Audio Salad's capabilities, particularly for region-specific requirements in the Pacific market.
+
+### Royalty Management
+
+Our royalty processing depends on:
+
+-   **Curve**: Comprehensive royalty management system that handles calculations and statement generation. This system integrates with our distribution platform to ingest sales data.
+
+### Analytics & Reporting
+
+Our current analytics capabilities include:
+
+-   **rowZero**: Data analytics platform that allows analysis of large files that cannot be processed locally
+-   **R-based Dashboards**: Custom reporting solutions built on R for specialized analytics
+-   **Python Data Processing**: Scripts for data cleaning, transformation, and analysis
+
+### Technical Stack Components
+
+Our current development stack includes:
+
+-   **Express.js**: Web application framework for building our internal APIs
+-   **Chart.js**: JavaScript library for building HTML-based charts
+-   **MariaDB**: Relational database for structured data storage
+-   **REST APIs**: For integration between internal systems and external platforms
+-   **JavaScript**: Core language for API development and web applications
+-   **HTML/CSS**: Frontend technologies for web-based dashboards and interfaces
+
+## Data Infrastructure
+
+```{r data-infrastructure, echo=FALSE}
+data_infra <- data.frame(
+  Technology = c("MariaDB", "CSV-based Data Storage", "Pandas (Python)", "R Libraries"),
+  Category = c("Database", "Data Storage", "Data Processing", "Data Analysis"),
+  Description = c("Relational database for structured data storage", 
+                  "File-based data storage for analytics and reporting", 
+                  "Python library for data manipulation and analysis", 
+                  "Specialized R packages for statistical analysis and visualization")
+)
+
+kable(data_infra, caption = "Data Infrastructure") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), font_size = 12, full_width = TRUE) %>%
+  column_spec(1, bold = TRUE, color = "#e4002b")
+```
+
+Our current data infrastructure relies on a combination of database systems and file-based storage:
+
+-   **MariaDB**: Used for specific applications requiring relational data structures
+-   **CSV-based Data Storage**: Significant portion of our analytics data is stored in CSV format
+-   **Python Data Stack**: Pandas, NumPy, and other libraries for data processing
+-   **R Analysis Tools**: Various R packages for statistical analysis and visualization
+
+## External Platforms & Partnerships
+
+```{r external-platforms, echo=FALSE}
+external_platforms <- data.frame(
+  Platform = c("Merlin", "DSP Direct Relationships", "Publishing Partnerships", "Cloud Infrastructure (Limited)"),
+  Category = c("Licensing", "Distribution", "Rights Management", "Infrastructure"),
+  Relationship = c("Member", "Direct Integrations", "Partnership", "Service Subscription")
+)
+
+kable(external_platforms, caption = "External Platforms & Partnerships") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), font_size = 12, full_width = TRUE) %>%
+  column_spec(1, bold = TRUE, color = "#e4002b")
+```
+
+While not directly part of our technology stack, several external platforms are critical to our operations:
+
+-   **Merlin**: As a member, we leverage this platform for improved terms with major DSPs and enhanced promotional opportunities for our artists.
+
+-   **Direct DSP Relationships**: We maintain direct relationships with several digital service providers, particularly those with strong presence in the Pacific region.
+
+-   **Cloud Infrastructure**: Limited use of cloud services for specific applications and storage needs.
+
+## System Architecture Overview
+
+Our current technology infrastructure follows this general architecture:
+
+```{r system-architecture, echo=FALSE}
+diagram <- grViz("
+  digraph tech_stack {
+    # Node attributes
+    node [shape = rectangle, fontname = 'Helvetica', style = filled, fillcolor = '#f5f5f5', color = '#e4002b', fontcolor = '#222222', penwidth = 1.5]
+    
+    # Edge attributes
+    edge [color = '#222222', penwidth = 1]
+    
+    # Cluster for Business Operations
+    subgraph cluster_business {
+      label = 'Business Operations'
+      style = filled
+      color = '#e4002b'
+      fillcolor = '#f9f9f9'
+      fontcolor = '#222222'
+      
+      Google [label = 'Google Workspace']
+      Slack [label = 'Slack']
+      Jira [label = 'Jira']
+    }
+    
+    # Cluster for Development
+    subgraph cluster_development {
+      label = 'Development Environment'
+      style = filled
+      color = '#e4002b'
+      fillcolor = '#f9f9f9'
+      fontcolor = '#222222'
+      
+      GitHub [label = 'GitHub']
+      R [label = 'R']
+      Python [label = 'Python']
+      NodeJS [label = 'Node.js']
+      Express [label = 'Express.js']
+      JavaScript [label = 'JavaScript']
+      Markdown [label = 'Markdown/QMD']
+    }
+    
+    # Cluster for Frontend
+    subgraph cluster_frontend {
+      label = 'Web Technologies'
+      style = filled
+      color = '#e4002b'
+      fillcolor = '#f9f9f9'
+      fontcolor = '#222222'
+      
+      HTML [label = 'HTML5']
+      CSS [label = 'CSS3']
+      ChartJS [label = 'Chart.js']
+    }
+    
+    # Cluster for Data
+    subgraph cluster_data {
+      label = 'Data Infrastructure'
+      style = filled
+      color = '#e4002b'
+      fillcolor = '#f9f9f9'
+      fontcolor = '#222222'
+      
+      MariaDB [label = 'MariaDB']
+      CSV [label = 'CSV Storage']
+      Pandas [label = 'Pandas/NumPy']
+    }
+    
+    # Cluster for Distribution
+    subgraph cluster_distribution {
+      label = 'Music Distribution'
+      style = filled
+      color = '#e4002b'
+      fillcolor = '#f9f9f9'
+      fontcolor = '#222222'
+      
+      AudioSalad [label = 'Audio Salad']
+      Curve [label = 'Curve']
+      rowZero [label = 'rowZero']
+      APIs [label = 'Internal APIs']
+    }
+    
+    # Cluster for External
+    subgraph cluster_external {
+      label = 'External Platforms'
+      style = filled
+      color = '#e4002b'
+      fillcolor = '#f9f9f9'
+      fontcolor = '#222222'
+      
+      Merlin [label = 'Merlin']
+      DSPs [label = 'DSPs']
+      Cloud [label = 'Limited Cloud']
+    }
+    
+    # Connections
+    Google -> Jira [label = 'Auth']
+    Google -> GitHub [label = 'Auth']
+    Slack -> GitHub [label = 'Notifications']
+    Slack -> Jira [label = 'Updates']
+    GitHub -> R
+    GitHub -> Python
+    GitHub -> NodeJS
+    GitHub -> Markdown
+    NodeJS -> Express [label = 'Runtime']
+    NodeJS -> JavaScript
+    JavaScript -> HTML
+    JavaScript -> CSS
+    JavaScript -> ChartJS
+    Express -> APIs [label = 'Framework']
+    R -> rowZero [label = 'Analysis']
+    Python -> Pandas
+    Pandas -> CSV [label = 'Processing']
+    Python -> AudioSalad [label = 'Integration']
+    MariaDB -> APIs
+    APIs -> AudioSalad
+    APIs -> Curve
+    AudioSalad -> DSPs [label = 'Distribution']
+    AudioSalad -> Curve [label = 'Sales Data']
+    Curve -> rowZero [label = 'Financial Data']
+    Merlin -> DSPs [label = 'Licensing']
+    Cloud -> APIs [label = 'Hosting']
+    Markdown -> GitHub [label = 'Documentation']
+    
+    # Graph attributes
+    graph [rankdir = TB, bgcolor = transparent, size = '12,12']
+  }
+")
+
+diagram
+```
+
+This architecture illustrates the interconnections between our various systems, highlighting both internal components and external dependencies.
+
+# Glossary of Terms
+
+```{r glossary-table, echo=FALSE}
+glossary_terms <- data.frame(
+  Term = c("API", "API Gateway", "CI/CD", "Cloud Infrastructure", "Container", "CSS", "DevOps", "DSP", "ETL", "GCP", "GraphQL", "HTML", "JavaScript", "Kubernetes", "Machine Learning", "Markdown", "Microservices", "Node.js", "NoSQL", "REST API", "RESTful", "SaaS", "Serverless Computing", "Slack", "TCO"),
+  Definition = c(
+    "Application Programming Interface. A set of rules that allows different software applications to communicate with each other.",
+    "A service that manages, secures, and optimizes API traffic between clients and backend services.",
+    "Continuous Integration/Continuous Deployment. A method of frequently delivering applications by automating testing and deployment processes.",
+    "Computing resources (servers, storage, databases, networking) delivered over the internet.",
+    "A standardized unit of software that packages code and dependencies so applications run quickly and reliably across computing environments.",
+    "Cascading Style Sheets. A language used to describe the presentation and styling of HTML documents.",
+    "A set of practices that combines software development (Dev) and IT operations (Ops) to shorten the development lifecycle.",
+    "Digital Service Provider. Platforms that distribute digital music (e.g., Spotify, Apple Music, Amazon Music).",
+    "Extract, Transform, Load. A process that extracts data from sources, transforms it to a suitable structure, and loads it into a target database.",
+    "Google Cloud Platform. A suite of cloud computing services offered by Google.",
+    "A query language for APIs that enables clients to request exactly the data they need.",
+    "HyperText Markup Language. The standard markup language for creating web pages and web applications.",
+    "A high-level programming language used for both client-side and server-side web development.",
+    "An open-source container orchestration platform that automates deploying, scaling, and managing containerized applications.",
+    "A subset of artificial intelligence that enables systems to learn from data, identify patterns, and make decisions with minimal human intervention.",
+    "A lightweight markup language with plain-text formatting syntax for creating formatted documents.",
+    "An architectural approach where software is composed of small, independent services that communicate over well-defined APIs.",
+    "A JavaScript runtime environment that executes JavaScript code outside a web browser.",
+    "Non-SQL or non-relational databases that store data in formats other than tables, allowing for greater flexibility.",
+    "Representational State Transfer API. An architectural style for designing networked applications using HTTP methods.",
+    "Refers to web services implementing REST architecture, characterized by statelessness and standard HTTP methods.",
+    "Software as a Service. A software distribution model where applications are hosted by a provider and made available over the internet.",
+    "A cloud-native development model where applications are hosted by a third-party service, eliminating infrastructure management for developers.",
+    "A cloud-based team collaboration platform that provides messaging, file sharing, and integration with various productivity tools.",
+    "Total Cost of Ownership. The purchase price plus all costs associated with using and maintaining something over its lifetime."
+  )
+)
+
+kable(glossary_terms, caption = "Glossary of Technical Terms") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), font_size = 12, full_width = TRUE) %>%
+  column_spec(1, bold = TRUE, color = "#e4002b")
+```
+
+## Music Distribution Terminology
+
+```{r music-distribution-glossary, echo=FALSE}
+music_terms <- data.frame(
+  Term = c("Audio Salad", "Curve", "Merlin", "Metadata", "rowZero", "Royalty Split", "Streaming Analytics", "ISRC", "UPC", "Advance Funding"),
+  Definition = c(
+    "A digital distribution platform that delivers music to streaming services and digital stores, handling metadata management and asset delivery.",
+    "A royalty management system that calculates and processes royalty payments for artists and rights holders.",
+    "A global digital rights agency for independent music, negotiating with digital services on behalf of indie labels and distributors.",
+    "Information about music files including artist name, track title, album name, genre, release date, and other identifying information.",
+    "A data analytics platform specifically designed for large file processing and music industry analytics.",
+    "The division of royalty earnings among multiple contributors to a musical work, including artists, producers, and songwriters.",
+    "The collection and analysis of data related to music streaming, including play counts, listener demographics, and geographic distribution.",
+    "International Standard Recording Code. A unique identifier for sound recordings and music video recordings.",
+    "Universal Product Code. A barcode symbol used for tracking trade items in stores, commonly used for physical music releases.",
+    "A financial arrangement where artists receive money upfront against their future royalty earnings."
+  )
+)
+
+kable(music_terms, caption = "Music Distribution Terminology") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), font_size = 12, full_width = TRUE) %>%
+  column_spec(1, bold = TRUE, color = "#e4002b")
+```
+
+# References
+
+```{r references-table, echo=FALSE}
+references <- data.frame(
+  Category = c("Cloud Computing", "Cloud Computing", "Cloud Computing", "Development Tools", "Development Tools", "Development Tools", "Development Tools", "Development Tools", "Music Distribution", "Music Distribution", "Database Technologies", "Database Technologies", "Analytics", "Payment Processing", "Infrastructure", "Business Intelligence", "Team Collaboration"),
+  Source = c(
+    "Amazon Web Services. (2025). *AWS Cloud Computing.* https://aws.amazon.com/",
+    "Google Cloud. (2025). *Google Cloud Platform.* https://cloud.google.com/",
+    "Microsoft. (2025). *Microsoft Azure.* https://azure.microsoft.com/",
+    "Node.js Foundation. (2025). *Node.js Documentation.* https://nodejs.org/",
+    "React. (2025). *React - A JavaScript library for building user interfaces.* https://reactjs.org/",
+    "Express.js. (2025). *Express - Node.js web application framework.* https://expressjs.com/",
+    "MDN Web Docs. (2025). *HTML: HyperText Markup Language.* https://developer.mozilla.org/en-US/docs/Web/HTML",
+    "MDN Web Docs. (2025). *CSS: Cascading Style Sheets.* https://developer.mozilla.org/en-US/docs/Web/CSS",
+    "Audio Salad. (2025). *Digital Music Distribution and Label Services.* https://www.audiosalad.com/",
+    "Merlin. (2025). *The global digital rights agency for the independent label sector.* https://www.merlinnetwork.org/",
+    "MariaDB Foundation. (2025). *MariaDB Server: The open source relational database.* https://mariadb.org/",
+    "MongoDB. (2025). *MongoDB: The Developer Data Platform.* https://www.mongodb.com/",
+    "TensorFlow. (2025). *An end-to-end platform for machine learning.* https://www.tensorflow.org/",
+    "Trolley. (2025). *Global Payouts & Compliance Platform for Businesses.* https://trolley.com/",
+    "Kubernetes. (2025). *Production-Grade Container Orchestration.* https://kubernetes.io/",
+    "Clic Data. (2025). *Business Intelligence for Decision Makers.* https://www.clicdata.com/",
+    "Slack. (2025). *Slack: Where work happens.* https://slack.com/"
+  )
+)
+
+kable(references, caption = "References") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), font_size = 12, full_width = TRUE) %>%
+  column_spec(1, bold = TRUE, color = "#e4002b")
+```
+
+## Industry Reports
+
+```{r industry-reports, echo=FALSE}
+industry_reports <- data.frame(
+  Category = c("Cloud Computing", "Music Industry", "Music Industry", "Music Streaming", "Technology Trends"),
+  Source = c(
+    "Gartner. (2024). *Magic Quadrant for Cloud Infrastructure and Platform Services.* Gartner, Inc.",
+    "IFPI. (2025). *Global Music Report 2025: Music revenue streams in the digital era.* International Federation of the Phonographic Industry.",
+    "Merlin. (2024). *Impact Report: How independents are thriving in the digital music ecosystem.* Merlin Network.",
+    "MIDiA Research. (2025). *Global Music Streaming Market Share Report.* MIDiA Research Ltd.",
+    "IDC. (2025). *Worldwide Cloud Services Spending Guide.* International Data Corporation."
+  )
+)
+
+kable(industry_reports, caption = "Industry Reports") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), font_size = 12, full_width = TRUE) %>%
+  column_spec(1, bold = TRUE, color = "#e4002b")
+```
+
+## Books and Academic Resources
+
+```{r books, echo=FALSE}
+books <- data.frame(
+  Category = c("Cloud Architecture", "DevOps", "Music Business", "Digital Strategy", "Data Science"),
+  Source = c(
+    "Erl, T., Mahmood, Z., & Puttini, R. (2023). *Cloud Computing: Concepts, Technology & Architecture* (3rd ed.). Pearson.",
+    "Kim, G., Humble, J., Debois, P., & Willis, J. (2021). *The DevOps Handbook: How to Create World-Class Agility, Reliability, & Security in Technology Organizations* (2nd ed.). IT Revolution Press.",
+    "Passman, D. S. (2024). *All You Need to Know About the Music Business* (11th ed.). Simon & Schuster.",
+    "Rogers, D. L. (2023). *The Digital Transformation Playbook: Rethink Your Business for the Digital Age.* Columbia Business School Publishing.",
+    "VanderPlas, J. (2023). *Python Data Science Handbook: Essential Tools for Working with Data* (2nd ed.). O'Reilly Media."
+  )
+)
+
+kable(books, caption = "Books and Academic Resources") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), font_size = 12, full_width = TRUE) %>%
+  column_spec(1, bold = TRUE, color = "#e4002b")
+```
