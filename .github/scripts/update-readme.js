@@ -184,7 +184,9 @@ function generateDocumentationSection(articles) {
       markdown += `### ${category}\n\n`;
 
       for (const article of grouped[category]) {
-        const relativePath = article.filePath.replace(/\\/g, '/').replace(/^.*?articles\//, 'articles/');
+        const relativePath = article.filePath
+          .replace(/\\/g, '/')
+          .replace(/^.*?articles\//, 'articles/');
         markdown += `- [${article.title}](${relativePath})`;
         if (article.description) {
           markdown += ` - ${article.description}`;
@@ -225,10 +227,7 @@ function updateReadme(readmePath, newDocSection) {
 
     // Replace the documentation section
     readme =
-      readme.substring(0, docStartIndex) +
-      newDocSection +
-      '\n\n' +
-      readme.substring(docEndIndex);
+      readme.substring(0, docStartIndex) + newDocSection + '\n\n' + readme.substring(docEndIndex);
   } else {
     // If no Documentation section exists, add it before "Adding New Articles"
     const addingArticlesMatch = readme.match(/^## Adding New Articles/m);

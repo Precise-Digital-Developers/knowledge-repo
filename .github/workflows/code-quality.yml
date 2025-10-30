@@ -17,7 +17,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: "20"
 
       - name: Install markdownlint-cli
         run: npm install -g markdownlint-cli
@@ -36,7 +36,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: "20"
 
       - name: Install HTMLHint and stylelint
         run: |
@@ -60,7 +60,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: "20"
 
       - name: Install Prettier
         run: npm install -g prettier
@@ -81,10 +81,9 @@ jobs:
       - name: Check Quarto documents
         run: |
           if ls articles/*.qmd 1> /dev/null 2>&1; then
-            for file in articles/*.qmd; do
-              echo "Checking $file"
-              quarto check $file || exit 1
-            done
+            echo "Found Quarto documents, validating YAML frontmatter..."
+            python3 .github/scripts/validate-quarto.py articles/*.qmd
+            echo "✅ All Quarto documents validated"
           else
-            echo "No .qmd files found"
+            echo "ℹ️  No .qmd files found"
           fi

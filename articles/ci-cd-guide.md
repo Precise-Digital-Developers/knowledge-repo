@@ -67,9 +67,9 @@ Our CI/CD pipeline consists of three main workflows:
 - **Tool**: `quarto`
 - **Purpose**: Validates Quarto documents (`.qmd` files)
 - **Checks**:
-  - Valid YAML frontmatter
-  - Proper code chunk syntax
-  - Executable R/Python code blocks
+  - Valid YAML frontmatter syntax
+  - Proper frontmatter structure
+- **Note**: Does not render R/Python code blocks (rendering requires full Quarto environment)
 
 ### 2. Security Scan Workflow
 

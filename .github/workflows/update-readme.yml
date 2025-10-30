@@ -4,7 +4,7 @@ on:
   push:
     branches: [main, develop]
     paths:
-      - 'articles/**'
+      - "articles/**"
   workflow_dispatch: # Allow manual trigger
 
 jobs:
@@ -22,7 +22,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: "20"
 
       - name: Run README update script
         run: node .github/scripts/update-readme.js

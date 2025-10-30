@@ -7,7 +7,7 @@ on:
     branches: [main, develop]
   schedule:
     # Run weekly on Monday at 9:00 AM UTC
-    - cron: '0 9 * * 1'
+    - cron: "0 9 * * 1"
 
 jobs:
   secret-scan:
@@ -17,7 +17,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Fetch all history for all branches
+          fetch-depth: 0 # Fetch all history for all branches
 
       - name: TruffleHog Secret Scan
         uses: trufflesecurity/trufflehog@main
@@ -153,7 +153,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: "20"
 
       - name: Run npm audit
         run: |
