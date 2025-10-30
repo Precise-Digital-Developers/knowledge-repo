@@ -1,0 +1,165 @@
+name: Security Scan
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  schedule:
+    # Run weekly on Monday at 9:00 AM UTC
+    - cron: '0 9 * * 1'
+
+jobs:
+  secret-scan:
+    name: Secret Detection
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch all history for all branches
+
+      - name: TruffleHog Secret Scan
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          base: ${{ github.event.repository.default_branch }}
+          head: HEAD
+          extra_args: --only-verified
+
+  gitleaks-scan:
+    name: GitLeaks Secret Detection
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run Gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }}
+
+  credential-pattern-scan:
+    name: Custom Credential Pattern Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Scan for common credential patterns
+        run: |
+          echo "Scanning for potential secrets and credentials..."
+
+          # Define patterns to search for
+          patterns=(
+            "password\s*=\s*['\"][^'\"]+['\"]"
+            "api[_-]?key\s*=\s*['\"][^'\"]+['\"]"
+            "secret\s*=\s*['\"][^'\"]+['\"]"
+            "token\s*=\s*['\"][^'\"]+['\"]"
+            "aws_access_key_id"
+            "aws_secret_access_key"
+            "private[_-]?key"
+            "client[_-]?secret"
+            "Bearer [A-Za-z0-9\-\._~\+\/]+"
+          )
+
+          # Files to exclude
+          exclude_files=".git|node_modules|.github/workflows"
+
+          found_issues=0
+
+          for pattern in "${patterns[@]}"; do
+            echo "Checking pattern: $pattern"
+            matches=$(grep -rniE "$pattern" . --exclude-dir={.git,node_modules} --exclude="*.yml" --exclude="*.yaml" || true)
+            if [ -n "$matches" ]; then
+              echo "⚠️  Found potential credential:"
+              echo "$matches"
+              found_issues=1
+            fi
+          done
+
+          if [ $found_issues -eq 1 ]; then
+            echo "❌ Security scan failed: Potential credentials detected"
+            exit 1
+          else
+            echo "✅ No obvious credentials detected"
+          fi
+
+  file-extension-check:
+    name: Check for Sensitive File Types
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check for sensitive files
+        run: |
+          echo "Checking for sensitive file types..."
+
+          # Define sensitive file patterns
+          sensitive_patterns=(
+            "*.pem"
+            "*.key"
+            "*.p12"
+            "*.pfx"
+            "*.jks"
+            "*.keystore"
+            "*.env"
+            ".env.*"
+            "*credentials*"
+            "*secret*"
+            "id_rsa"
+            "id_dsa"
+          )
+
+          found_sensitive=0
+
+          for pattern in "${sensitive_patterns[@]}"; do
+            files=$(find . -name "$pattern" -not -path "./.git/*" -not -path "./node_modules/*" 2>/dev/null || true)
+            if [ -n "$files" ]; then
+              echo "⚠️  Found sensitive file type: $pattern"
+              echo "$files"
+              found_sensitive=1
+            fi
+          done
+
+          # Check for preview files in articles folder
+          echo "Checking for preview files..."
+          preview_files=$(find articles -name "*_files" -type d -o -name "*.html" 2>/dev/null || true)
+          if [ -n "$preview_files" ]; then
+            echo "⚠️  Found preview files that should not be committed:"
+            echo "$preview_files"
+            found_sensitive=1
+          fi
+
+          if [ $found_sensitive -eq 1 ]; then
+            echo "❌ Sensitive or preview files detected in repository"
+            exit 1
+          else
+            echo "✅ No sensitive file types or preview files detected"
+          fi
+
+  dependency-check:
+    name: Dependency Security Check
+    runs-on: ubuntu-latest
+    if: hashFiles('package.json') != ''
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run npm audit
+        run: |
+          if [ -f "package.json" ]; then
+            npm audit --audit-level=moderate
+          else
+            echo "No package.json found, skipping npm audit"
+          fi
+        continue-on-error: false

@@ -23,6 +23,7 @@ Before making any API calls, you need to authenticate and obtain an access token
 3. Select POST as the request type.
 
 4. Enter the URL:
+
    ```
    https://api.curveroyaltysystems.com/authenticate?applicationToken=K5DuDFvugb
    ```
@@ -56,11 +57,13 @@ Once authenticated, you can use the access token to retrieve data from different
 ### Example 1: Get Account Information
 
 **Endpoint:**
+
 ```
 https://api.curveroyaltysystems.com/api/account
 ```
 
 **Steps in Postman:**
+
 - Method: GET
 - Headers:
   - Authorization: Bearer YOUR_ACCESS_TOKEN
@@ -70,6 +73,7 @@ https://api.curveroyaltysystems.com/api/account
 To fetch details of a specific report, you need to pass the reportId.
 
 **Endpoint:**
+
 ```
 https://api.curveroyaltysystems.com/api/reports/{reportId}
 ```
@@ -77,6 +81,7 @@ https://api.curveroyaltysystems.com/api/reports/{reportId}
 **Replace {reportId} with an actual ID.**
 
 Example:
+
 ```
 https://api.curveroyaltysystems.com/api/reports/12345
 ```
@@ -86,16 +91,19 @@ https://api.curveroyaltysystems.com/api/reports/12345
 To get earnings data, you may need to include query parameters for filtering.
 
 **Endpoint:**
+
 ```
 https://api.curveroyaltysystems.com/api/earnings
 ```
 
 **Example Request with Query Parameters:**
+
 ```
 https://api.curveroyaltysystems.com/api/earnings?startDate=2024-01-01&endDate=2024-01-31
 ```
 
 **Query Parameters:**
+
 - `startDate` -- Beginning of the period (YYYY-MM-DD)
 - `endDate` -- End of the period (YYYY-MM-DD)
 
@@ -118,7 +126,8 @@ After making requests, you will receive a JSON response. Example:
 - **Check API docs** for required parameters per endpoint.
 - **Use environment variables** in Postman for managing API tokens dynamically.
 
-### Useful Links:
+### Useful Links
+
 - [Curve API Documentation](https://api.curveroyaltysystems.com/api-docs/#)
 - [Postman Learning Center](https://learning.postman.com/docs/introduction/overview/)
 - [Curve Data Viewer GitHub Repository](https://github.com/Precise-Digital-Developers/curveDataViewer/tree/main)

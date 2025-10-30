@@ -32,10 +32,12 @@
     <script>
         const GITHUB_REPO = 'Precise-Digital-Developers/knowledge-repo';
         const GITHUB_BRANCH = 'main';
-        
-        mermaid.initialize({ 
-            startOnLoad: true,
-            theme: 'default'
+
+        // Initialize mermaid with proper configuration
+        mermaid.initialize({
+            startOnLoad: false,
+            theme: 'default',
+            securityLevel: 'loose'
         });
         
         async function loadArticle() {
@@ -67,6 +69,22 @@
         }
         
         function renderMarkdown(markdown, filename) {
+            // Remove YAML frontmatter
+            const frontmatterRegex = /^---\n[\s\S]*?\n---\n/;
+            const cleanMarkdown = markdown.replace(frontmatterRegex, '');
+
+            // Extract and replace mermaid blocks BEFORE marked processes them
+            const mermaidBlocks = [];
+            let markdownWithPlaceholders = cleanMarkdown.replace(
+                /```mermaid\n([\s\S]*?)```/g,
+                (match, code) => {
+                    const id = 'mermaid-' + Math.random().toString(36).substr(2, 9);
+                    mermaidBlocks.push({ id, code: code.trim() });
+                    return `<div class="mermaid-placeholder" data-id="${id}"></div>`;
+                }
+            );
+
+            // Configure marked with syntax highlighting
             marked.setOptions({
                 breaks: true,
                 gfm: true,
@@ -78,27 +96,42 @@
                     return code;
                 }
             });
-            
-            const frontmatterRegex = /^---\n[\s\S]*?\n---\n/;
-            const cleanMarkdown = markdown.replace(frontmatterRegex, '');
-            
-            let html = marked.parse(cleanMarkdown);
-            
+
+            // Parse markdown to HTML
+            let html = marked.parse(markdownWithPlaceholders);
+
+            // Replace placeholders with actual mermaid divs
+            mermaidBlocks.forEach(block => {
+                html = html.replace(
+                    `<div class="mermaid-placeholder" data-id="${block.id}"></div>`,
+                    `<div class="mermaid" id="${block.id}">${block.code}</div>`
+                );
+            });
+
+            // Set page title
             const title = filename
                 .replace(/\.(md|qmd)$/, '')
                 .replace(/-/g, ' ')
                 .replace(/_/g, ' ')
                 .replace(/\b\w/g, l => l.toUpperCase());
-            
+
             document.title = `${title} - Knowledge Repository`;
-            
-            html = html.replace(/```mermaid([\s\S]*?)```/g, (match, code) => {
-                const id = 'mermaid-' + Math.random().toString(36).substr(2, 9);
-                return `<div class="mermaid" id="${id}">${code.trim()}</div>`;
-            });
-            
+
+            // Render HTML and initialize mermaid
             document.getElementById('content').innerHTML = html;
-            mermaid.run();
+
+            // Wait for DOM to be ready, then render mermaid diagrams
+            setTimeout(() => {
+                const mermaidElements = document.querySelectorAll('.mermaid');
+                if (mermaidElements.length > 0) {
+                    console.log(`Found ${mermaidElements.length} mermaid diagram(s)`);
+                    mermaid.run({
+                        nodes: mermaidElements
+                    }).catch(err => {
+                        console.error('Mermaid rendering error:', err);
+                    });
+                }
+            }, 100);
         }
         
         function printArticle() {

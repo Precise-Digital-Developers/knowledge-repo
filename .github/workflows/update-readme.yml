@@ -1,0 +1,63 @@
+name: Update README
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'articles/**'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  update-readme:
+    name: Auto-update Documentation Links
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run README update script
+        run: node .github/scripts/update-readme.js
+
+      - name: Check for changes
+        id: check_changes
+        run: |
+          if git diff --quiet README.md; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+            echo "No changes to README.md"
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "Changes detected in README.md"
+          fi
+
+      - name: Commit and push changes
+        if: steps.check_changes.outputs.changed == 'true'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add README.md
+          git commit -m "docs: Auto-update README with article links
+
+          🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+          Co-Authored-By: Claude <noreply@anthropic.com>"
+          git push
+
+      - name: Summary
+        if: steps.check_changes.outputs.changed == 'true'
+        run: |
+          echo "✅ README.md has been updated with latest article links"
+          echo "📝 Changes committed and pushed to repository"
+
+      - name: No changes needed
+        if: steps.check_changes.outputs.changed == 'false'
+        run: |
+          echo "ℹ️ README.md is already up to date"

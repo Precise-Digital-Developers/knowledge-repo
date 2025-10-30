@@ -5,6 +5,7 @@
 Feature FM is a comprehensive feature management platform that enables controlled feature rollouts, A/B testing, and dynamic configuration management. This documentation covers the sandbox environment API, which is used for testing and development before deploying to production.
 
 The Feature FM API provides programmatic access to:
+
 - Feature flag management and configuration
 - Audience targeting and segmentation
 - Analytics and usage tracking
@@ -35,10 +36,10 @@ The Feature FM API provides programmatic access to:
 
 ### Sandbox Environment Details
 
-| Environment | Base URL | Purpose |
-|------------|----------|---------|
-| Sandbox | `https://api.sandbox-precise.digital` | Testing and development |
-| Production | `https://api.precise.digital` | Live feature management |
+| Environment | Base URL                              | Purpose                 |
+| ----------- | ------------------------------------- | ----------------------- |
+| Sandbox     | `https://api.sandbox-precise.digital` | Testing and development |
+| Production  | `https://api.precise.digital`         | Live feature management |
 
 ## Quick Start
 
@@ -74,11 +75,13 @@ Create a new Postman environment named "Feature FM Sandbox" with these variables
 ### 4. Test the Connection
 
 Run the Health Check endpoint to verify connectivity:
+
 ```
 GET {{baseUrl}}/health
 ```
 
 Expected response:
+
 ```json
 {
   "status": "healthy",
@@ -108,6 +111,7 @@ sequenceDiagram
 **Endpoint**: `POST /auth/token`
 
 **Request Body**:
+
 ```json
 {
   "apiKey": "{{apiKey}}",
@@ -117,6 +121,7 @@ sequenceDiagram
 ```
 
 **Response**:
+
 ```json
 {
   "access_token": "eyJhbGciOiJIUzI1NiIs...",
@@ -128,6 +133,7 @@ sequenceDiagram
 ### Using the Token
 
 Include the token in the Authorization header:
+
 ```http
 Authorization: Bearer {{accessToken}}
 ```
@@ -135,6 +141,7 @@ Authorization: Bearer {{accessToken}}
 ### Token Refresh Strategy
 
 The collection includes automatic token management:
+
 - Pre-request scripts check token expiration
 - Test scripts store new tokens automatically
 - Warning messages appear when token expires soon
@@ -183,9 +190,11 @@ Audiences define user segments for targeted feature rollouts:
 ### Features Management
 
 #### List Features
+
 `GET /features`
 
 Query parameters:
+
 - `page`: Page number (default: 1)
 - `limit`: Results per page (default: 20)
 - `status`: Filter by status
@@ -193,6 +202,7 @@ Query parameters:
 - `search`: Search term
 
 Example response:
+
 ```json
 {
   "data": [
@@ -217,9 +227,11 @@ Example response:
 ```
 
 #### Create Feature
+
 `POST /features`
 
 Request body:
+
 ```json
 {
   "name": "New Feature",
@@ -239,14 +251,17 @@ Request body:
 ```
 
 #### Update Feature
+
 `PUT /features/:featureId`
 
 Updates entire feature configuration.
 
 #### Toggle Feature
+
 `PATCH /features/:featureId/toggle`
 
 Quick enable/disable without changing configuration:
+
 ```json
 {
   "enabled": true
@@ -254,6 +269,7 @@ Quick enable/disable without changing configuration:
 ```
 
 #### Delete Feature
+
 `DELETE /features/:featureId`
 
 Permanently removes a feature (sandbox only).
@@ -261,9 +277,11 @@ Permanently removes a feature (sandbox only).
 ### Audience Management
 
 #### Create Audience
+
 `POST /audiences`
 
 Define targeting rules:
+
 ```json
 {
   "name": "Beta Testers",
@@ -285,6 +303,7 @@ Define targeting rules:
 ```
 
 Supported operators:
+
 - `equals`
 - `not_equals`
 - `greater_than`
@@ -296,14 +315,17 @@ Supported operators:
 ### Analytics
 
 #### Feature Usage Analytics
+
 `GET /analytics/features/:featureId`
 
 Query parameters:
+
 - `startDate`: YYYY-MM-DD format
 - `endDate`: YYYY-MM-DD format
 - `granularity`: `hourly`, `daily`, `weekly`, `monthly`
 
 Response includes:
+
 ```json
 {
   "featureId": "feat_123",
@@ -324,9 +346,11 @@ Response includes:
 ```
 
 #### Export Analytics
+
 `POST /analytics/export`
 
 Generate downloadable reports:
+
 ```json
 {
   "reportType": "feature_usage",
@@ -342,17 +366,13 @@ Generate downloadable reports:
 ### Webhooks
 
 #### Register Webhook
+
 `POST /webhooks`
 
 ```json
 {
   "url": "https://your-app.com/webhooks/feature-fm",
-  "events": [
-    "feature.created",
-    "feature.updated",
-    "feature.toggled",
-    "feature.deleted"
-  ],
+  "events": ["feature.created", "feature.updated", "feature.toggled", "feature.deleted"],
   "active": true,
   "retryPolicy": {
     "maxRetries": 3,
@@ -362,6 +382,7 @@ Generate downloadable reports:
 ```
 
 Available events:
+
 - `feature.created`
 - `feature.updated`
 - `feature.toggled`
@@ -395,6 +416,7 @@ The collection includes comprehensive test coverage:
 ### Automated Testing
 
 Pre-request scripts handle:
+
 ```javascript
 // Token expiration check
 const tokenExpiry = pm.environment.get('tokenExpirationTime');
@@ -404,6 +426,7 @@ if (Date.now() > tokenExpiry - 300000) {
 ```
 
 Test scripts validate:
+
 ```javascript
 // Response validation
 pm.test('Feature created successfully', () => {
@@ -416,6 +439,7 @@ pm.test('Feature created successfully', () => {
 ### Test Data Management
 
 Sandbox environment provides:
+
 - Automatic data reset every 24 hours
 - Test feature prefixes (`test_`, `sandbox_`)
 - Safe deletion without production impact
@@ -440,15 +464,15 @@ Sandbox environment provides:
 
 ### Common Error Codes
 
-| Code | HTTP Status | Description |
-|------|------------|-------------|
-| `INVALID_CREDENTIALS` | 401 | Invalid API key or secret |
-| `TOKEN_EXPIRED` | 401 | JWT has expired |
-| `INSUFFICIENT_PERMISSIONS` | 403 | Action not allowed |
-| `FEATURE_NOT_FOUND` | 404 | Feature doesn't exist |
-| `DUPLICATE_FEATURE` | 409 | Feature name already exists |
-| `INVALID_CONFIGURATION` | 400 | Invalid feature configuration |
-| `RATE_LIMIT_EXCEEDED` | 429 | Too many requests |
+| Code                       | HTTP Status | Description                   |
+| -------------------------- | ----------- | ----------------------------- |
+| `INVALID_CREDENTIALS`      | 401         | Invalid API key or secret     |
+| `TOKEN_EXPIRED`            | 401         | JWT has expired               |
+| `INSUFFICIENT_PERMISSIONS` | 403         | Action not allowed            |
+| `FEATURE_NOT_FOUND`        | 404         | Feature doesn't exist         |
+| `DUPLICATE_FEATURE`        | 409         | Feature name already exists   |
+| `INVALID_CONFIGURATION`    | 400         | Invalid feature configuration |
+| `RATE_LIMIT_EXCEEDED`      | 429         | Too many requests             |
 
 ### Error Recovery Strategies
 
@@ -460,10 +484,10 @@ Sandbox environment provides:
 
 ### Limits
 
-| Plan | Requests/Hour | Burst Limit | Concurrent Connections |
-|------|--------------|-------------|----------------------|
-| Sandbox | 1,000 | 100/min | 10 |
-| Production | 10,000 | 1,000/min | 100 |
+| Plan       | Requests/Hour | Burst Limit | Concurrent Connections |
+| ---------- | ------------- | ----------- | ---------------------- |
+| Sandbox    | 1,000         | 100/min     | 10                     |
+| Production | 10,000        | 1,000/min   | 100                    |
 
 ### Rate Limit Headers
 
@@ -519,19 +543,14 @@ async function retryWithBackoff(request, maxRetries = 3) {
 ### Webhook Security
 
 Verify webhook signatures:
+
 ```javascript
 const crypto = require('crypto');
 
 function verifyWebhook(payload, signature, secret) {
-  const expectedSignature = crypto
-    .createHmac('sha256', secret)
-    .update(payload)
-    .digest('hex');
-  
-  return crypto.timingSafeEqual(
-    Buffer.from(signature),
-    Buffer.from(expectedSignature)
-  );
+  const expectedSignature = crypto.createHmac('sha256', secret).update(payload).digest('hex');
+
+  return crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expectedSignature));
 }
 ```
 
@@ -540,11 +559,13 @@ function verifyWebhook(payload, signature, secret) {
 ### Feature Flag Naming
 
 Use clear, consistent naming:
+
 - `feature_` prefix for features
 - `experiment_` prefix for A/B tests
 - `kill_` prefix for kill switches
 
 Examples:
+
 - `feature_dark_mode`
 - `experiment_checkout_flow_v2`
 - `kill_payment_processing`
@@ -552,6 +573,7 @@ Examples:
 ### Configuration Management
 
 Structure feature configurations consistently:
+
 ```json
 {
   "enabled": boolean,
@@ -570,6 +592,7 @@ Structure feature configurations consistently:
 ### Gradual Rollouts
 
 Follow safe rollout practices:
+
 1. Start with internal users (0%)
 2. Beta testers (5-10%)
 3. Small percentage (10-25%)
@@ -579,6 +602,7 @@ Follow safe rollout practices:
 ### Monitoring and Alerting
 
 Track key metrics:
+
 - Feature adoption rate
 - Error rates per feature
 - Performance impact
@@ -592,7 +616,8 @@ Track key metrics:
 
 **Problem**: Token expires mid-testing session
 
-**Solution**: 
+**Solution**:
+
 1. Check console warnings for expiration alerts
 2. Run "Refresh Token" request
 3. Consider implementing auto-refresh in pre-request scripts
@@ -602,6 +627,7 @@ Track key metrics:
 **Problem**: Created feature doesn't show in list
 
 **Solution**:
+
 1. Check feature status filter
 2. Verify pagination parameters
 3. Confirm feature creation succeeded
@@ -612,6 +638,7 @@ Track key metrics:
 **Problem**: Webhook endpoint not called
 
 **Solution**:
+
 1. Verify webhook is active
 2. Check event subscriptions
 3. Test with webhook testing tool
@@ -622,6 +649,7 @@ Track key metrics:
 **Problem**: No analytics data for feature
 
 **Solution**:
+
 1. Ensure feature has been enabled
 2. Check date range parameters
 3. Allow time for data processing (5-10 minutes)
@@ -630,6 +658,7 @@ Track key metrics:
 ### Debug Mode
 
 Enable debug logging in requests:
+
 ```javascript
 // Add to pre-request script
 pm.environment.set('debug', true);
@@ -670,12 +699,12 @@ When ready to move to production:
 
 ## Version History
 
-| Version | Date | Changes |
-|---------|------|---------|
-| 1.0.0 | 2024-01-15 | Initial sandbox release |
-| 1.1.0 | 2024-02-01 | Added audience targeting |
-| 1.2.0 | 2024-03-01 | Analytics endpoints |
-| 1.3.0 | 2024-04-01 | Webhook support |
+| Version | Date       | Changes                  |
+| ------- | ---------- | ------------------------ |
+| 1.0.0   | 2024-01-15 | Initial sandbox release  |
+| 1.1.0   | 2024-02-01 | Added audience targeting |
+| 1.2.0   | 2024-03-01 | Analytics endpoints      |
+| 1.3.0   | 2024-04-01 | Webhook support          |
 
 ## Appendix
 
@@ -747,12 +776,12 @@ PATCH /features/kill_123/toggle
 
 Expected response times in sandbox:
 
-| Endpoint | P50 | P95 | P99 |
-|----------|-----|-----|-----|
-| GET /features | 50ms | 150ms | 300ms |
-| POST /features | 100ms | 250ms | 500ms |
-| GET /analytics/* | 200ms | 500ms | 1000ms |
+| Endpoint          | P50   | P95   | P99    |
+| ----------------- | ----- | ----- | ------ |
+| GET /features     | 50ms  | 150ms | 300ms  |
+| POST /features    | 100ms | 250ms | 500ms  |
+| GET /analytics/\* | 200ms | 500ms | 1000ms |
 
 ---
 
-*This documentation covers the Feature FM sandbox API. For production documentation and advanced features, refer to the production API guide.*
+_This documentation covers the Feature FM sandbox API. For production documentation and advanced features, refer to the production API guide._

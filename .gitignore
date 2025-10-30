@@ -1,5 +1,108 @@
+# Operating System Files
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
-*.log
+desktop.ini
+$RECYCLE.BIN/
+
+# IDE and Editor Files
 .vscode/
 .idea/
+.claude/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+*.sublime-project
+*.sublime-workspace
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Node.js
+node_modules/
+npm-debug.log
+yarn.lock
+package-lock.json
+.npm
+.node_repl_history
+
+# Environment Variables and Secrets
+.env
+.env.local
+.env.*.local
+.env.development
+.env.test
+.env.production
+*.key
+*.pem
+*.p12
+*.pfx
+*.jks
+*.keystore
+credentials.json
+secrets.json
+config/secrets.yml
+
+# Build Output
+dist/
+build/
+out/
+*.min.js
+*.min.css
+
+# Cache and Temporary Files
+.cache/
+*.tmp
+*.temp
+.sass-cache/
+.parcel-cache/
+
+# R and Quarto
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+*_cache/
+*_files/
+.quarto/
+
+# Quarto/Markdown Preview Output (ignore in articles folder)
+articles/*.html
+articles/**/*.html
+
+# Test files
+test-*.html
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+ENV/
+env/
+.venv
+
+# Coverage and Testing
+coverage/
+.nyc_output/
+*.coverage
+.hypothesis/
+.pytest_cache/
+
+# Backup Files
+*.bak
+*.backup
+*~
