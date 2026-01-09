@@ -207,6 +207,7 @@ python oauth_flow.py
 ```
 
 **What happens:**
+
 1. Opens browser to Ebury login page
 2. You log in with your Ebury credentials
 3. Browser redirects back with authorization code
@@ -214,6 +215,7 @@ python oauth_flow.py
 5. Tokens saved to `.ebury_tokens.json`
 
 **Example output:**
+
 ```
 Opening browser for Ebury authentication...
 Waiting for callback...
@@ -418,12 +420,14 @@ python test_sandbox.py
 **Test Coverage:** 16 tests covering standard API endpoints
 
 **Capabilities:**
+
 - Dynamic client ID discovery
 - Comprehensive error reporting
 - Automatic report generation (HTML, Markdown, JSON)
 - Auto-updates `LATEST_TEST_SUMMARY_SANDBOX.md`
 
 **Generated Reports:**
+
 - `ebury_test_results_sandbox_YYYYMMDD_HHMMSS.html` - Beautiful visual report
 - `ebury_test_results_sandbox_YYYYMMDD_HHMMSS.md` - Markdown report
 - `ebury_test_results_sandbox_YYYYMMDD_HHMMSS.json` - Raw data
@@ -440,6 +444,7 @@ python test_royalty_payments.py
 **Test Coverage:** 16 tests for mass payment scenarios
 
 **Business Context:**
+
 - Music royalty payment workflows
 - 1200+ payees (artists and record labels)
 - Monthly payment cycles
@@ -447,6 +452,7 @@ python test_royalty_payments.py
 - New Zealand-based company
 
 **Test Categories:**
+
 - Exchange rate retrieval
 - Forward rates for payment planning
 - Beneficiary management by region
@@ -455,6 +461,7 @@ python test_royalty_payments.py
 - Payment reporting and tracking
 
 **Generated Reports:**
+
 - `royalty_test_results_sandbox_YYYYMMDD_HHMMSS.html`
 - `royalty_test_results_sandbox_YYYYMMDD_HHMMSS.md`
 - `royalty_test_results_sandbox_YYYYMMDD_HHMMSS.json`
@@ -480,6 +487,7 @@ python test_production.py
 ```
 
 **Safety Features:**
+
 - All write operations blocked
 - `PermissionError` raised if write attempted
 - Identical test structure to sandbox (minus write operations)
@@ -487,12 +495,14 @@ python test_production.py
 ### Current Test Results
 
 **Standard Test Suite (`test_sandbox.py`):**
+
 - Total: 16 tests
 - Passing: 13 tests (81.2%)
 - Skipped: 3 tests (18.8%)
 - Status: ✅ Stable
 
 **Royalty Test Suite (`test_royalty_payments.py`):**
+
 - Total: 16 tests
 - Passing: 13 tests (81.2%)
 - Skipped: 3 tests (18.8%)
@@ -587,27 +597,32 @@ Tests display colored console output:
 Every test run automatically generates three types of reports:
 
 **1. HTML Reports** - Beautiful, professional visual reports
+
 - Color-coded test status
 - Visual progress bars
 - Detailed error information
 - Professional formatting for stakeholders
 
 **2. Markdown Reports** - Version-control friendly summaries
+
 - Plain text format
 - Easy to track in git
 - Quick review in any text editor
 
 **3. JSON Results** - Raw data for programmatic analysis
+
 - Complete test details
 - Error messages and stack traces
 - Timestamps and metadata
 
 **4. Always-Current Summary** - Quick status check
+
 - `LATEST_TEST_SUMMARY_SANDBOX.md` - Overwrites each run
 - Always shows current test status
 - Perfect for quick status checks
 
 **Example Report Files:**
+
 ```text
 ebury_test_results_sandbox_20260109_134303.html
 ebury_test_results_sandbox_20260109_134303.md
@@ -616,12 +631,14 @@ LATEST_TEST_SUMMARY_SANDBOX.md  (always current)
 ```
 
 **Viewing Reports:**
+
 - Open `.html` files in any browser for visual report
 - View `.md` files in text editor or GitHub
 - Parse `.json` files for automation
 - Check `LATEST_TEST_SUMMARY_*.md` for quick status
 
 For complete documentation on report generation, see:
+
 - `docs/REPORT_GENERATION.md` - Complete guide
 - `docs/AUTOMATED_REPORTS_SUMMARY.md` - Implementation details
 
@@ -1272,22 +1289,22 @@ The project includes comprehensive documentation organized for easy navigation:
 
 ### Quick Reference Documentation (Root Directory)
 
-| File | Purpose |
-|------|---------|
-| `README.md` | Main project overview and setup guide |
-| `QUICK_START.md` | **Start here** - Common commands and quick reference |
-| `PROJECT_STRUCTURE.md` | Complete project organization guide |
+| File                             | Purpose                                                 |
+| -------------------------------- | ------------------------------------------------------- |
+| `README.md`                      | Main project overview and setup guide                   |
+| `QUICK_START.md`                 | **Start here** - Common commands and quick reference    |
+| `PROJECT_STRUCTURE.md`           | Complete project organization guide                     |
 | `LATEST_TEST_SUMMARY_SANDBOX.md` | **Always current** - Latest test results (auto-updated) |
-| `CLEANUP_SUMMARY.md` | Recent codebase cleanup documentation |
-| `DOCUMENTATION_INDEX.md` | Complete documentation catalog |
+| `CLEANUP_SUMMARY.md`             | Recent codebase cleanup documentation                   |
+| `DOCUMENTATION_INDEX.md`         | Complete documentation catalog                          |
 
 ### Detailed Documentation (docs/ Directory)
 
-| File | Purpose |
-|------|---------|
-| `docs/REPORT_GENERATION.md` | Complete guide to automated report generation |
-| `docs/AUTOMATED_REPORTS_SUMMARY.md` | Report system implementation details |
-| `docs/Ebury_API_Documentation.md` | Ebury API endpoint reference |
+| File                                | Purpose                                       |
+| ----------------------------------- | --------------------------------------------- |
+| `docs/REPORT_GENERATION.md`         | Complete guide to automated report generation |
+| `docs/AUTOMATED_REPORTS_SUMMARY.md` | Report system implementation details          |
+| `docs/Ebury_API_Documentation.md`   | Ebury API endpoint reference                  |
 
 ### Generated Reports
 

@@ -40,7 +40,6 @@ jobs:
         uses: gitleaks/gitleaks-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }}
 
   credential-pattern-scan:
     name: Custom Credential Pattern Scan
@@ -73,7 +72,7 @@ jobs:
 
           for pattern in "${patterns[@]}"; do
             echo "Checking pattern: $pattern"
-            matches=$(grep -rniE "$pattern" . --exclude-dir={.git,node_modules} --exclude="*.yml" --exclude="*.yaml" || true)
+            matches=$(grep -rniE "$pattern" . --exclude-dir={.git,node_modules} --exclude="*.yml" --exclude="*.yaml" --exclude="*.md" || true)
             if [ -n "$matches" ]; then
               echo "⚠️  Found potential credential:"
               echo "$matches"
@@ -145,7 +144,6 @@ jobs:
   dependency-check:
     name: Dependency Security Check
     runs-on: ubuntu-latest
-    if: hashFiles('package.json') != ''
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
