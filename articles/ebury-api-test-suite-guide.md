@@ -23,9 +23,11 @@ The Ebury API Test Suite is a comprehensive, production-ready testing framework 
 - **Dual Environment Support**: Test against sandbox (full CRUD) or production (read-only)
 - **Interactive Dashboard**: Web-based interface for visual API testing
 - **CLI Test Suites**: Automated testing with comprehensive endpoint coverage
-- **OAuth2 Authentication**: Support for client credentials and user authentication flows
+- **OAuth2 Authentication**: Browser-based OAuth2 Authorization Code Flow with automatic token refresh
+- **Automated Report Generation**: HTML, Markdown, and JSON reports generated after each test run
+- **Royalty Payment Testing**: Specialized test suite for mass payment workflows (1200+ payees)
 - **Safety Controls**: Production write-operation blocking prevents accidental modifications
-- **Result Tracking**: JSON export with timestamps and test summaries
+- **Always-Current Summaries**: Auto-updating test result files for quick status checks
 
 ### Architecture
 
@@ -66,19 +68,44 @@ Before using the test suite, you need:
 
 ```
 Ebury_API_Tests/
-├── config.py                    # Configuration and endpoint catalog
-├── base_test.py                 # Base test class with common functionality
-├── test_sandbox.py              # Sandbox tests (full CRUD operations)
-├── test_production.py           # Production tests (read-only)
-├── app.py                       # Flask dashboard for visual testing
-├── verify_setup.py              # Setup verification utility
-├── requirements.txt             # Python dependencies
-├── .env.example                 # Environment template
-├── .env                         # Your credentials (gitignored)
-├── .gitignore                   # Git ignore rules
-├── docs/
-│   └── Ebury_API_Documentation.md  # Detailed API documentation
-└── README.md                    # Quick start guide
+├── 📄 Core Application Files
+│   ├── config.py                      # Configuration management
+│   ├── base_test.py                   # Base test class with auth & reporting
+│   ├── oauth_flow.py                  # OAuth2 browser authentication
+│   ├── report_generator.py            # Automated report generation
+│   ├── app.py                         # Flask web dashboard
+│   └── verify_setup.py                # Setup verification tool
+│
+├── 🧪 Test Suites
+│   ├── test_sandbox.py                # Standard API endpoint tests (16 tests)
+│   ├── test_royalty_payments.py       # Royalty payment workflow tests (16 tests)
+│   ├── test_production.py             # Production environment tests
+│   └── test_api_with_tokens.py        # Quick token-based tests
+│
+├── 📚 Documentation
+│   ├── README.md                      # Main project README
+│   ├── QUICK_START.md                 # Quick start guide
+│   ├── PROJECT_STRUCTURE.md           # Project organization guide
+│   ├── CLEANUP_SUMMARY.md             # Codebase cleanup details
+│   ├── LATEST_TEST_SUMMARY_SANDBOX.md # Latest test results (auto-updated)
+│   ├── DOCUMENTATION_INDEX.md         # Documentation catalog
+│   └── docs/
+│       ├── AUTOMATED_REPORTS_SUMMARY.md
+│       ├── REPORT_GENERATION.md
+│       └── Ebury_API_Documentation.md
+│
+├── 🗃️ Archives
+│   ├── archives/old_tests/            # Deprecated test files
+│   └── archives/test_results/         # Old test result files
+│
+├── 🔐 Configuration (Not in version control)
+│   ├── .env                           # Environment variables & credentials
+│   └── .ebury_tokens.json             # OAuth2 access/refresh tokens
+│
+└── 🔧 Meta Files
+    ├── .gitignore                     # Git ignore rules
+    ├── requirements.txt               # Python dependencies
+    └── CODEBASE_CLEANUP_COMPLETE.txt  # Cleanup record
 ```
 
 ### 3. Install Dependencies
@@ -160,70 +187,138 @@ This checks:
 
 ## Authentication
 
-### OAuth2 Authentication
+### OAuth2 Authorization Code Flow (Browser-Based)
 
-Ebury uses OAuth2 for API authentication with multiple supported flows.
+The Ebury API Test Suite uses **OAuth2 Authorization Code Flow** for authentication. This is the primary authentication method implemented in the project.
 
-### Client Credentials Flow
+### How It Works
 
-Used for server-to-server API access (most common):
+1. **Browser Authentication**: Opens your default browser automatically
+2. **User Login**: You log in to Ebury with your credentials (including 2FA if enabled)
+3. **Token Storage**: Access and refresh tokens are saved to `.ebury_tokens.json`
+4. **Automatic Refresh**: Tokens are refreshed automatically when expired
 
-```http
-POST /oauth/token
-Host: auth-sandbox.ebury.io
-Content-Type: application/x-www-form-urlencoded
+### Quick Start: Get Your First Token
 
-grant_type=client_credentials&client_id={client_id}&client_secret={client_secret}
+Run the OAuth flow script to authenticate via browser:
+
+```bash
+python oauth_flow.py
 ```
 
-**Response:**
+**What happens:**
+1. Opens browser to Ebury login page
+2. You log in with your Ebury credentials
+3. Browser redirects back with authorization code
+4. Script exchanges code for access token
+5. Tokens saved to `.ebury_tokens.json`
+
+**Example output:**
+```
+Opening browser for Ebury authentication...
+Waiting for callback...
+✓ Authentication successful!
+✓ Tokens saved to .ebury_tokens.json
+Access token expires in: 3600 seconds (1 hour)
+```
+
+### Token Storage: `.ebury_tokens.json`
+
+After successful authentication, your tokens are stored in `.ebury_tokens.json`:
 
 ```json
 {
   "access_token": "eyJhbGciOiJSUzI1NiIs...",
+  "refresh_token": "refresh_token_value",
   "token_type": "Bearer",
   "expires_in": 3600,
-  "refresh_token": "refresh_token_value"
+  "expires_at": 1704815999,
+  "scope": "read write"
 }
 ```
 
-### User Authentication Flow
+**Important:** This file contains sensitive credentials and is automatically excluded from git via `.gitignore`.
 
-Used for browser-based applications with 2FA support:
+### When to Re-authenticate
 
-```http
-POST /oauth/token
-Host: auth-sandbox.ebury.io
-Content-Type: application/x-www-form-urlencoded
+You need to run `python oauth_flow.py` when:
 
-grant_type=password&client_id={client_id}&client_secret={client_secret}&username={username}&password={password}
-```
+- Starting fresh (no `.ebury_tokens.json` file)
+- Access token expired (every hour)
+- You see "401 Unauthorized" errors
+- Refresh token expired (up to 28 days)
 
-### Refresh Token Flow
+### Automatic Token Refresh
 
-Extend sessions without re-authentication:
+The test suite automatically handles token refresh:
 
-```http
-POST /oauth/token
-Host: auth-sandbox.ebury.io
-Content-Type: application/x-www-form-urlencoded
-
-grant_type=refresh_token&client_id={client_id}&client_secret={client_secret}&refresh_token={refresh_token}
-```
+1. Checks if access token is expired
+2. Uses refresh token to get new access token
+3. Updates `.ebury_tokens.json` automatically
+4. Retries failed requests with new token
 
 ### Token Details
 
-| Token Type    | Validity      | Usage                     |
-| ------------- | ------------- | ------------------------- |
-| Access Token  | 3600 sec      | API request authorization |
-| Refresh Token | Up to 28 days | Obtain new access tokens  |
+| Token Type    | Validity      | Usage                            |
+| ------------- | ------------- | -------------------------------- |
+| Access Token  | 3600 sec      | API request authorization        |
+| Refresh Token | Up to 28 days | Obtain new access tokens         |
+| Authorization | One-time use  | Exchange for access/refresh pair |
 
-### Using Tokens
+### Using Tokens in API Requests
 
-Include the access token in all API requests:
+All API requests require the access token in the Authorization header:
 
 ```http
 Authorization: Bearer {access_token}
+```
+
+The test suite handles this automatically by loading tokens from `.ebury_tokens.json`.
+
+### Environment Variables Required
+
+Your `.env` file needs these values:
+
+```env
+# OAuth2 Application Credentials
+EBURY_SANDBOX_CLIENT_ID=P8Qf79gsNbl5tQp4kjb6Dhkg6EEUQpOg
+EBURY_SANDBOX_CLIENT_SECRET=your_client_secret
+
+# Ebury Client ID (for API calls)
+EBURY_DEFAULT_CLIENT_ID=EBPCLI285961
+
+# Production (optional)
+EBURY_PROD_CLIENT_ID=your_production_client_id
+EBURY_PROD_CLIENT_SECRET=your_production_client_secret
+```
+
+**Note:** Username and password are NOT stored in `.env` - you enter them in the browser during OAuth flow.
+
+### Authentication Architecture
+
+```
+┌─────────────────┐
+│  oauth_flow.py  │ ← Run this to authenticate
+└────────┬────────┘
+         │
+         v
+┌─────────────────────┐
+│  Opens Browser      │
+│  User logs in       │
+│  Gets auth code     │
+└────────┬────────────┘
+         │
+         v
+┌──────────────────────┐
+│ .ebury_tokens.json   │ ← Tokens stored here
+└────────┬─────────────┘
+         │
+         v
+┌──────────────────────┐
+│  Test Suites         │ ← Auto-load tokens
+│  - test_sandbox.py   │
+│  - test_royalty_*    │
+└──────────────────────┘
 ```
 
 ---
@@ -302,20 +397,79 @@ The dashboard displays endpoint buttons organized by category:
 
 ## Using the CLI Test Suites
 
-### Sandbox Testing (Full CRUD)
+### Authentication First
 
-Run full CRUD testing against the sandbox environment:
+Before running any tests, authenticate to get your access token:
+
+```bash
+python oauth_flow.py
+```
+
+This opens your browser, saves tokens to `.ebury_tokens.json`, and makes them available for all test suites.
+
+### Standard API Testing
+
+Run comprehensive endpoint testing against the sandbox:
 
 ```bash
 python test_sandbox.py
 ```
 
-**Capabilities:**
+**Test Coverage:** 16 tests covering standard API endpoints
 
-- Create, Read, Update, Delete operations
-- Resource tracking and cleanup
+**Capabilities:**
 - Dynamic client ID discovery
 - Comprehensive error reporting
+- Automatic report generation (HTML, Markdown, JSON)
+- Auto-updates `LATEST_TEST_SUMMARY_SANDBOX.md`
+
+**Generated Reports:**
+- `ebury_test_results_sandbox_YYYYMMDD_HHMMSS.html` - Beautiful visual report
+- `ebury_test_results_sandbox_YYYYMMDD_HHMMSS.md` - Markdown report
+- `ebury_test_results_sandbox_YYYYMMDD_HHMMSS.json` - Raw data
+- `LATEST_TEST_SUMMARY_SANDBOX.md` - Always-current summary (overwrites each run)
+
+### Royalty Payment Testing
+
+Run specialized tests for music royalty payment workflows:
+
+```bash
+python test_royalty_payments.py
+```
+
+**Test Coverage:** 16 tests for mass payment scenarios
+
+**Business Context:**
+- Music royalty payment workflows
+- 1200+ payees (artists and record labels)
+- Monthly payment cycles
+- Multi-currency support (NZD, USD, GBP)
+- New Zealand-based company
+
+**Test Categories:**
+- Exchange rate retrieval
+- Forward rates for payment planning
+- Beneficiary management by region
+- Trade booking workflows
+- Mass payment creation
+- Payment reporting and tracking
+
+**Generated Reports:**
+- `royalty_test_results_sandbox_YYYYMMDD_HHMMSS.html`
+- `royalty_test_results_sandbox_YYYYMMDD_HHMMSS.md`
+- `royalty_test_results_sandbox_YYYYMMDD_HHMMSS.json`
+
+### Quick API Validation
+
+Run fast smoke tests on 6 core endpoints:
+
+```bash
+python test_api_with_tokens.py
+```
+
+**Purpose:** Quick validation that API is working with current tokens
+
+**Test Coverage:** 6 core endpoints (clients, accounts, beneficiaries, trades, payments, contacts)
 
 ### Production Testing (Read-Only)
 
@@ -326,14 +480,27 @@ python test_production.py
 ```
 
 **Safety Features:**
-
 - All write operations blocked
 - `PermissionError` raised if write attempted
 - Identical test structure to sandbox (minus write operations)
 
-### Test Coverage
+### Current Test Results
 
-The CLI suites include 40+ test methods organized by category:
+**Standard Test Suite (`test_sandbox.py`):**
+- Total: 16 tests
+- Passing: 13 tests (81.2%)
+- Skipped: 3 tests (18.8%)
+- Status: ✅ Stable
+
+**Royalty Test Suite (`test_royalty_payments.py`):**
+- Total: 16 tests
+- Passing: 13 tests (81.2%)
+- Skipped: 3 tests (18.8%)
+- Status: ✅ Stable
+
+**Combined Coverage:** 32 active tests across both suites
+
+### Test Coverage by Category
 
 #### Metadata Tests
 
@@ -415,14 +582,48 @@ Tests display colored console output:
 - Yellow: Warning or skipped
 - Blue: Informational
 
-### Result Files
+### Automated Report Generation
 
-Tests export results to JSON files:
+Every test run automatically generates three types of reports:
 
+**1. HTML Reports** - Beautiful, professional visual reports
+- Color-coded test status
+- Visual progress bars
+- Detailed error information
+- Professional formatting for stakeholders
+
+**2. Markdown Reports** - Version-control friendly summaries
+- Plain text format
+- Easy to track in git
+- Quick review in any text editor
+
+**3. JSON Results** - Raw data for programmatic analysis
+- Complete test details
+- Error messages and stack traces
+- Timestamps and metadata
+
+**4. Always-Current Summary** - Quick status check
+- `LATEST_TEST_SUMMARY_SANDBOX.md` - Overwrites each run
+- Always shows current test status
+- Perfect for quick status checks
+
+**Example Report Files:**
+```text
+ebury_test_results_sandbox_20260109_134303.html
+ebury_test_results_sandbox_20260109_134303.md
+ebury_test_results_sandbox_20260109_134303.json
+LATEST_TEST_SUMMARY_SANDBOX.md  (always current)
 ```
-ebury_test_results_sandbox_YYYYMMDD_HHMMSS.json
-ebury_test_results_production_YYYYMMDD_HHMMSS.json
-```
+
+**Viewing Reports:**
+- Open `.html` files in any browser for visual report
+- View `.md` files in text editor or GitHub
+- Parse `.json` files for automation
+- Check `LATEST_TEST_SUMMARY_*.md` for quick status
+
+For complete documentation on report generation, see:
+- `docs/REPORT_GENERATION.md` - Complete guide
+- `docs/AUTOMATED_REPORTS_SUMMARY.md` - Implementation details
 
 ---
 
@@ -516,31 +717,33 @@ Content-Type: application/json
 
 ### Account Endpoints
 
+**IMPORTANT:** The Ebury API uses **query parameters** for client_id, not path parameters.
+
 #### List Accounts
 
 ```http
-GET /clients/{client_id}/accounts
+GET /accounts?client_id={client_id}
 Authorization: Bearer {token}
 ```
 
 #### Get Account Details
 
 ```http
-GET /clients/{client_id}/accounts/{account_id}
+GET /accounts/{account_id}?client_id={client_id}
 Authorization: Bearer {token}
 ```
 
 #### Get All Balances
 
 ```http
-GET /clients/{client_id}/accounts/balances
+GET /accounts/balances?client_id={client_id}
 Authorization: Bearer {token}
 ```
 
 #### Get Account Transactions
 
 ```http
-GET /clients/{client_id}/accounts/{account_id}/transactions
+GET /accounts/{account_id}/transactions?client_id={client_id}
 Authorization: Bearer {token}
 ```
 
@@ -556,21 +759,21 @@ Query parameters:
 #### List Beneficiaries
 
 ```http
-GET /clients/{client_id}/beneficiaries
+GET /beneficiaries?client_id={client_id}
 Authorization: Bearer {token}
 ```
 
 #### Get Beneficiary
 
 ```http
-GET /clients/{client_id}/beneficiaries/{beneficiary_id}
+GET /beneficiaries/{beneficiary_id}?client_id={client_id}
 Authorization: Bearer {token}
 ```
 
 #### Create Beneficiary (Sandbox Only)
 
 ```http
-POST /clients/{client_id}/beneficiaries
+POST /beneficiaries?client_id={client_id}
 Authorization: Bearer {token}
 Content-Type: application/json
 
@@ -586,7 +789,7 @@ Content-Type: application/json
 #### Update Beneficiary (Sandbox Only)
 
 ```http
-PATCH /clients/{client_id}/beneficiaries/{beneficiary_id}
+PATCH /beneficiaries/{beneficiary_id}?client_id={client_id}
 Authorization: Bearer {token}
 Content-Type: application/json
 
@@ -598,7 +801,7 @@ Content-Type: application/json
 #### Delete Beneficiary (Sandbox Only)
 
 ```http
-DELETE /clients/{client_id}/beneficiaries/{beneficiary_id}
+DELETE /beneficiaries/{beneficiary_id}?client_id={client_id}
 Authorization: Bearer {token}
 ```
 
@@ -607,21 +810,21 @@ Authorization: Bearer {token}
 #### List Trades
 
 ```http
-GET /clients/{client_id}/trades
+GET /trades?client_id={client_id}
 Authorization: Bearer {token}
 ```
 
 #### Get Trade Details
 
 ```http
-GET /clients/{client_id}/trades/{trade_id}
+GET /trades/{trade_id}?client_id={client_id}
 Authorization: Bearer {token}
 ```
 
 #### Book Trade (Sandbox Only)
 
 ```http
-POST /clients/{client_id}/trades
+POST /trades?client_id={client_id}
 Authorization: Bearer {token}
 Content-Type: application/json
 
@@ -635,35 +838,28 @@ Content-Type: application/json
 #### List Payments
 
 ```http
-GET /clients/{client_id}/payments
+GET /payments?client_id={client_id}
 Authorization: Bearer {token}
 ```
 
 #### Get Payment Details
 
 ```http
-GET /clients/{client_id}/payments/{payment_id}
+GET /payments/{payment_id}?client_id={client_id}
 Authorization: Bearer {token}
 ```
 
 #### Estimate Payment Fee
 
 ```http
-POST /clients/{client_id}/payments/estimate-fee
+GET /payments/estimate-fee?client_id={client_id}&beneficiary_id={ben_id}&amount={amount}&currency={currency}
 Authorization: Bearer {token}
-Content-Type: application/json
-
-{
-  "beneficiary_id": "ben_123",
-  "amount": 1000,
-  "currency": "GBP"
-}
 ```
 
 #### Create Payment (Sandbox Only)
 
 ```http
-POST /clients/{client_id}/payments
+POST /payments?client_id={client_id}
 Authorization: Bearer {token}
 Content-Type: application/json
 
@@ -678,7 +874,7 @@ Content-Type: application/json
 #### Authorize Payment (Sandbox Only)
 
 ```http
-PATCH /clients/{client_id}/payments/{payment_id}
+PATCH /payments/{payment_id}?client_id={client_id}
 Authorization: Bearer {token}
 Content-Type: application/json
 
@@ -692,14 +888,14 @@ Content-Type: application/json
 #### List Contacts
 
 ```http
-GET /clients/{client_id}/contacts
+GET /contacts?client_id={client_id}
 Authorization: Bearer {token}
 ```
 
 #### Get Contact Details
 
 ```http
-GET /clients/{client_id}/contacts/{contact_id}
+GET /contacts/{contact_id}?client_id={client_id}
 Authorization: Bearer {token}
 ```
 
@@ -736,7 +932,7 @@ Authorization: Bearer {token}
 
 ## Common Workflows
 
-### Workflow 1: Test API Connectivity
+### Workflow 1: First-Time Setup and Authentication
 
 1. **Verify setup**:
 
@@ -744,14 +940,23 @@ Authorization: Bearer {token}
    python verify_setup.py
    ```
 
-2. **Authenticate via CLI**:
+2. **Authenticate via browser**:
 
    ```bash
-   python test_sandbox.py
-   # First test authenticates and checks client access
+   python oauth_flow.py
    ```
 
-3. **Check results** for authentication success.
+   This opens your browser, you log in, and tokens are saved to `.ebury_tokens.json`.
+
+3. **Test API connectivity**:
+
+   ```bash
+   python test_api_with_tokens.py
+   ```
+
+   Quick smoke test to verify everything works.
+
+4. **Check results** in the console output or `LATEST_TEST_SUMMARY_SANDBOX.md`.
 
 ### Workflow 2: Execute a Trade
 
@@ -788,7 +993,7 @@ Authorization: Bearer {token}
 4. **Book the trade** using quote ID:
 
    ```http
-   POST /clients/{client_id}/trades
+   POST /trades?client_id={client_id}
    {
      "quote_id": "quote_123"
    }
@@ -799,24 +1004,19 @@ Authorization: Bearer {token}
 1. **List beneficiaries** or create new one:
 
    ```http
-   GET /clients/{client_id}/beneficiaries
+   GET /beneficiaries?client_id={client_id}
    ```
 
 2. **Estimate payment fee**:
 
    ```http
-   POST /clients/{client_id}/payments/estimate-fee
-   {
-     "beneficiary_id": "ben_123",
-     "amount": 1000,
-     "currency": "GBP"
-   }
+   GET /payments/estimate-fee?client_id={client_id}&beneficiary_id={ben_id}&amount=1000&currency=GBP
    ```
 
 3. **Create payment**:
 
    ```http
-   POST /clients/{client_id}/payments
+   POST /payments?client_id={client_id}
    {
      "beneficiary_id": "ben_123",
      "amount": 1000,
@@ -828,7 +1028,7 @@ Authorization: Bearer {token}
 4. **Authorize payment**:
 
    ```http
-   PATCH /clients/{client_id}/payments/{payment_id}
+   PATCH /payments/{payment_id}?client_id={client_id}
    {
      "action": "authorize"
    }
@@ -860,23 +1060,71 @@ Authorization: Bearer {token}
 
 ### Workflow 5: Run Full Test Suite
 
-1. **Sandbox (full CRUD)**:
+1. **Authenticate first**:
+
+   ```bash
+   python oauth_flow.py
+   ```
+
+2. **Run standard test suite**:
 
    ```bash
    python test_sandbox.py
    ```
 
-2. **Production (read-only)**:
+   Generates HTML, Markdown, and JSON reports automatically.
+
+3. **Run royalty payment tests**:
 
    ```bash
-   python test_production.py
+   python test_royalty_payments.py
    ```
 
-3. **Review JSON results**:
+   Tests mass payment workflows for music royalties.
+
+4. **Review results**:
 
    ```bash
+   # Quick status check
+   cat LATEST_TEST_SUMMARY_SANDBOX.md
+
+   # Open HTML report in browser
+   open ebury_test_results_sandbox_*.html
+
+   # View detailed JSON
    cat ebury_test_results_sandbox_*.json
    ```
+
+### Workflow 6: Daily Development Routine
+
+1. **Start of day** - Refresh token if needed:
+
+   ```bash
+   python oauth_flow.py
+   ```
+
+2. **Run quick smoke test**:
+
+   ```bash
+   python test_api_with_tokens.py
+   ```
+
+3. **Make your changes** to the codebase
+
+4. **Run full test suite**:
+
+   ```bash
+   python test_sandbox.py
+   python test_royalty_payments.py
+   ```
+
+5. **Check status**:
+
+   ```bash
+   cat LATEST_TEST_SUMMARY_SANDBOX.md
+   ```
+
+6. **Review HTML reports** for detailed analysis
 
 ---
 
@@ -887,12 +1135,28 @@ Authorization: Bearer {token}
 #### 401 Unauthorized
 
 - **Cause**: Invalid or expired access token
-- **Solution**: Re-authenticate using client credentials or refresh token
+- **Solution**: Re-authenticate using `python oauth_flow.py`
 
-#### 403 Forbidden
+#### 403 Forbidden - client_id missing
 
-- **Cause**: Insufficient permissions or wrong client ID
-- **Solution**: Verify client ID and API credentials have required scopes
+- **Cause**: Missing `?client_id=X` query parameter in API request
+- **Solution**: Ensure all API calls include `?client_id={your_client_id}` as a query parameter (not path parameter)
+- **Example**: Use `/accounts?client_id=EBPCLI285961` not `/clients/EBPCLI285961/accounts`
+
+#### 403 Forbidden - Insufficient Permissions
+
+- **Cause**: API credentials don't have required scopes
+- **Solution**: Verify credentials in Ebury Partner Portal have correct permissions
+
+#### No tokens available
+
+- **Cause**: Missing `.ebury_tokens.json` file
+- **Solution**: Run `python oauth_flow.py` to authenticate via browser
+
+#### Browser doesn't open during oauth_flow.py
+
+- **Cause**: No default browser configured or headless environment
+- **Solution**: Copy the URL from the terminal output and paste it into any browser manually
 
 #### 429 Too Many Requests
 
@@ -1002,10 +1266,51 @@ This prevents duplicate operations if requests are retried.
 
 ---
 
+## Project Documentation
+
+The project includes comprehensive documentation organized for easy navigation:
+
+### Quick Reference Documentation (Root Directory)
+
+| File | Purpose |
+|------|---------|
+| `README.md` | Main project overview and setup guide |
+| `QUICK_START.md` | **Start here** - Common commands and quick reference |
+| `PROJECT_STRUCTURE.md` | Complete project organization guide |
+| `LATEST_TEST_SUMMARY_SANDBOX.md` | **Always current** - Latest test results (auto-updated) |
+| `CLEANUP_SUMMARY.md` | Recent codebase cleanup documentation |
+| `DOCUMENTATION_INDEX.md` | Complete documentation catalog |
+
+### Detailed Documentation (docs/ Directory)
+
+| File | Purpose |
+|------|---------|
+| `docs/REPORT_GENERATION.md` | Complete guide to automated report generation |
+| `docs/AUTOMATED_REPORTS_SUMMARY.md` | Report system implementation details |
+| `docs/Ebury_API_Documentation.md` | Ebury API endpoint reference |
+
+### Generated Reports
+
+Test runs generate timestamped reports in multiple formats:
+
+- `*_results_*.html` - Visual reports for browser viewing
+- `*_results_*.md` - Markdown reports for version control
+- `*_results_*.json` - Raw data for programmatic analysis
+- `LATEST_TEST_SUMMARY_*.md` - Always-current status (overwrites each run)
+
+### Archives
+
+Historical files organized in `archives/` directory:
+
+- `archives/old_tests/` - Deprecated test files
+- `archives/test_results/` - Past test results (organized by month)
+
+---
+
 ## Additional Resources
 
 - **Ebury Partner Portal**: Credential and account management
-- **Ebury API Documentation**: `docs/Ebury_API_Documentation.md`
+- **Ebury API Documentation**: Official docs at <https://docs.ebury.io/>
 - **Flask Documentation**: <https://flask.palletsprojects.com/>
 - **OAuth2 Specification**: <https://oauth.net/2/>
 
@@ -1045,15 +1350,27 @@ Content-Type: application/json
 ### Test Commands
 
 ```bash
+# Authenticate via browser (run first!)
+python oauth_flow.py
+
 # Verify setup
 python verify_setup.py
 
-# Sandbox testing (full CRUD)
+# Quick API validation (6 endpoints)
+python test_api_with_tokens.py
+
+# Standard test suite (16 tests)
 python test_sandbox.py
+
+# Royalty payment tests (16 tests)
+python test_royalty_payments.py
 
 # Production testing (read-only)
 python test_production.py
 
 # Interactive dashboard
 python app.py
+
+# Check latest results
+cat LATEST_TEST_SUMMARY_SANDBOX.md
 ```
