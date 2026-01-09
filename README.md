@@ -42,7 +42,6 @@ A simple, automated knowledge repository for our team's documentation.
 
 ### Infrastructure & Development
 
-- [CI/CD Pipeline Guide](articles/ci-cd-guide.md) - This document describes the continuous integration and continuous deployment (CI...
 - [Precise Digital Technology Stack](articles/tech-stack.qmd) - Infrastructure Documentation
 
 ## Adding New Articles
