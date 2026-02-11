@@ -283,11 +283,11 @@ Your `.env` file needs these values:
 
 ```env
 # OAuth2 Application Credentials
-EBURY_SANDBOX_CLIENT_ID=P8Qf79gsNbl5tQp4kjb6Dhkg6EEUQpOg
+EBURY_SANDBOX_CLIENT_ID=your_sandbox_client_id
 EBURY_SANDBOX_CLIENT_SECRET=your_client_secret
 
 # Ebury Client ID (for API calls)
-EBURY_DEFAULT_CLIENT_ID=EBPCLI285961
+EBURY_DEFAULT_CLIENT_ID=your_ebury_client_id
 
 # Production (optional)
 EBURY_PROD_CLIENT_ID=your_production_client_id
@@ -1158,7 +1158,7 @@ Authorization: Bearer {token}
 
 - **Cause**: Missing `?client_id=X` query parameter in API request
 - **Solution**: Ensure all API calls include `?client_id={your_client_id}` as a query parameter (not path parameter)
-- **Example**: Use `/accounts?client_id=EBPCLI285961` not `/clients/EBPCLI285961/accounts`
+- **Example**: Use `/accounts?client_id=your_ebury_client_id` not `/clients/your_ebury_client_id/accounts`
 
 #### 403 Forbidden - Insufficient Permissions
 

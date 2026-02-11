@@ -92,31 +92,53 @@ The Curve API v1.10.0 collection includes read-only requests organized into the 
 
 ### Available Resource Folders
 
-- **Analytics** - Run analytics queries for detailed reporting
-- **Accounting Periods** - Retrieve and manage accounting periods
+- **Accounting Periods** - Retrieve and manage accounting periods, sales files, and history
+- **Analytics** - Run analytics queries for detailed reporting with filters and comparisons
 - **Clients** - Access client information
-- **Companies** - Retrieve company data
+- **Companies** - Retrieve company data and history
 - **Composers** - Access composer information
-- **Contracts** - Retrieve contract details, releases, tracks, works, costs, and transactions
-- **Contract Term Groups** - Access contract term group data
-- **Costs** - Retrieve cost information
-- **CWR Acknowledgements & Deliveries** - Manage CWR (Common Works Registration) data
-- **Delivery Partners, Profiles, & Schedules** - Access delivery configuration
+- **Contract Term Groups** - Access contract term group data and history
+- **Contracts** - Retrieve contract details, releases, tracks, works, costs, transactions, and future transactions
+- **Costs** - Retrieve cost information and history
+- **CWR Acknowledgements** - Manage CWR (Common Works Registration) acknowledgement data, deliveries, and exports
+- **CWR Deliveries** - Manage CWR delivery scheduling, export, and work redelivery
+- **Delivered Works** - Retrieve delivered works data
+- **Delivery Logs** - Access delivery log records
+- **Delivery Partners** - Access delivery partner configuration and listings
+- **Delivery Profiles** - Retrieve delivery profile configurations
+- **Delivery Schedules** - Access delivery schedules and queued works
 - **Fixed Reports** - Retrieve pre-configured reports
-- **Imports & Import Partners** - Access import data and configurations
+- **Import Partners** - Access import partner configurations
+- **Imports** - Access import data, history, and error exports
 - **Invoices** - Retrieve invoice information
-- **ISWC Acknowledgements & Deliveries** - Manage ISWC (International Standard Musical Work Code) data
-- **Library Templates** - Access library template configurations
-- **MCPS Negatives & Retentions** - Retrieve MCPS-related data
-- **Notifications** - Access system notifications
-- **Output Sales** - Retrieve sales data and totals
-- **Parents** - Access parent entity information
-- **Periods** - Retrieve detailed period information, sales files, costs, and batch tasks
-- **Releases** - Access release data and analytics
-- **Reports** - Retrieve statement and royalty reports
-- **Sales Files** - Access sales file information
-- **Tracks** - Retrieve track data
-- **Works** - Access work information and source data
+- **ISWC Acknowledgements** - Manage ISWC (International Standard Musical Work Code) acknowledgement data
+- **ISWC Deliveries** - Manage ISWC deliveries, work exports, and delivery actions
+- **Library Templates** - Access library template configurations and history
+- **MCPS Negatives** - Retrieve MCPS negatives data and history
+- **MCPS Retentions** - Retrieve MCPS retention data and history
+- **Notifications** - Access system notifications, counts, and mark-as-read
+- **Output Sales** - Retrieve output sales data and totals
+- **Parents** - Access parent entity information and history
+- **Payees** - Retrieve payee details, summaries, balances, contracts, transactions, and statements
+- **Payments** - Access payment information and history
+- **Periods** - Retrieve detailed period information, sales files, costs, batch tasks, QA reports, and statement management
+- **Publishers** - Access publisher information and history
+- **Releases** - Access release data, history, and tracks
+- **Reports** - Retrieve, export, and display royalty reports
+- **Sales** - Access individual sales records
+- **Sales Files** - Access sales file information, filter options, and bulk operations
+- **Sales Templates** - Retrieve sales template configurations and history
+- **Search** - Search across multiple resource types
+- **Spotify** - Search Spotify catalogue data
+- **Statements** - Retrieve statements, analytics, transactions, sales files, and costs per statement
+- **Territory Groups** - Access territory group configurations and history
+- **Tracks** - Retrieve track data, history, and associated releases
+- **Transactions** - Access individual transaction records
+- **Unmapped Releases** - Retrieve unmapped release data and history
+- **Unmapped Tracks** - Retrieve unmapped track data and history
+- **Unmapped Works** - Retrieve unmapped work data and history
+- **Users** - Access user information, associated clients, and payees
+- **Works** - Access work information, delivery statuses, deliveries, history, and source data
 
 ### Example 1: Retrieve All Clients
 
@@ -219,6 +241,93 @@ Navigate to **Analytics** > **Run analytics queries**
 - `calculationTypes` - Filter by calculation types
 - `contractCategories` - Filter by contract categories
 - `periodIds` - Filter by period IDs (array)
+- `salesFileIds` - Filter by sales file IDs (array)
+- `catType` - Catalogue type: `Release`, `Track`, or `Contract`
+- `targetPeriod` - Target period filter
+- `foreignId` - Foreign ID filter
+- `distributionChannels` - Filter by channel: `Digital`, `Physical`, `Performance`, `Licensing`, `Sync`, `Merchandise`, `Other`
+- `configurations` - Filter by format: `CD`, `DVD`, `LP`, `Download`, `Premium Stream`, `Ad-funded Stream`, etc.
+- `territories` - Filter by territory codes (array, e.g., `US`, `UK`)
+- `priceCategories` - Filter by price tier: `Full Price`, `Mid Price`, `Budget`
+- `catalogueGroups` - Filter by catalogue groups
+- `releaseIds` - Filter by release IDs (array)
+- `trackIds` - Filter by track IDs (array)
+- `workIds` - Filter by work IDs (array)
+- `saleDate` - Filter by sale date (format: `YYYY-MM-DD`)
+- `transactionDate` - Filter by transaction date (format: `YYYY-MM-DD`)
+
+> **Note:** These query parameters are disabled by default in the Postman collection. Enable the ones you need for your specific query.
+
+### Example 5: Retrieve Payees
+
+Navigate to **Payees** > **Retrieve a list of Payees**
+
+**Endpoint:**
+
+```
+{{base_url}}/payees?applicationToken={{application_token}}&limit=100
+```
+
+**Method:** GET
+
+**Query Parameters:**
+
+- `limit` - Number of results to return (default: 100)
+
+**Related Sub-Endpoints:**
+
+- `/payees/:id` - Get a specific payee
+- `/payees/:id/summary` - Payee summary overview
+- `/payees/:id/detail` - Detailed payee information
+- `/payees/:id/payee_balance` - Payee balance
+- `/payees/:id/contracts` - Contracts for a payee (via `/payees/:id/get_contracts_and_transactions`)
+- `/payees/:id/transactions` - Transactions for a payee
+- `/payees/:id/statements` - Statements for a payee
+- `/payees/:id/users` - Users associated with a payee
+
+### Example 6: Retrieve Statements
+
+Navigate to **Statements** > **Retrieve a list of Statements**
+
+**Endpoint:**
+
+```
+{{base_url}}/statements?applicationToken={{application_token}}&limit=100
+```
+
+**Method:** GET
+
+**Query Parameters:**
+
+- `limit` - Number of results to return
+- `periodId` - Filter statements by period ID
+- `payeeId` - Filter statements by payee ID
+
+**Related Sub-Endpoints:**
+
+- `/statements/:id` - Get a specific statement
+- `/statements/:id/detail` - Statement analytics
+- `/statements/:id/transactions` - Transactions within a statement
+- `/statements/:id/sales_files` - Sales files for a statement
+- `/statements/:id/costs` - Costs for a statement
+- `/statements/:id/send` - Send a statement
+- `/statements/periods` - List periods that have statements
+
+### Example 7: Search Across Resources
+
+Navigate to **Search** > **Search across multiple resources**
+
+**Endpoint:**
+
+```
+{{base_url}}/search?applicationToken={{application_token}}&q=search-term
+```
+
+**Method:** GET
+
+**Query Parameters:**
+
+- `q` - Search query string
 
 ## 4. Handling Responses
 
