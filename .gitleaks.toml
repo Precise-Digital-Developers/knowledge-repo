@@ -2,9 +2,11 @@
 useDefault = true
 
 [allowlist]
-description = "Allowlist for sandbox credential placeholders previously in documentation"
+description = "Allowlist for example API keys and tokens in documentation articles"
 commits = [
   "2c2584123d8a75122c962a424846ab5f5f37ff2c",
   "352b4e9b14ce47cebadf61fbc6e3e00a9f9b89d2",
   "be24b7a5715e24ba4e8f3188cefac2b3270a36ca",
+  "50d9036599938c55dc424b2a84d4bf601f1d648a",
+  "ec0f7d89543154e2653cf3627ba6ec50cb20631b",
 ]
