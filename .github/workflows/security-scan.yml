@@ -42,7 +42,7 @@ jobs:
         uses: trufflesecurity/trufflehog@main
         with:
           path: ./
-          extra_args: --only-verified --since-commit HEAD~10
+          extra_args: --only-verified
 
   gitleaks-scan:
     name: GitLeaks Secret Detection
