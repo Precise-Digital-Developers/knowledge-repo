@@ -2,7 +2,7 @@
 title: "Precise Digital Technology Stack"
 subtitle: "Infrastructure Documentation"
 author: "Cesaire Tobias"
-date: "2025-05-09"
+date: "2026-02-27"
 format:
   html:
     theme: lux
@@ -33,6 +33,8 @@ library(htmlwidgets)
 
 This document provides an overview of Precise Digital's current technology infrastructure. Our technology ecosystem has evolved to support independent artists and labels through digital distribution, royalty management, and data analytics services.
 
+Recent development of our client dashboard platform has introduced a modern fullstack application layer built on Next.js, React, TypeScript, Supabase, and tRPC, significantly expanding our web capabilities beyond the legacy Express.js and vanilla JavaScript stack.
+
 # Current Technology Stack
 
 Our current technology stack spans multiple domains, from core business operations to specialized music distribution tools.
@@ -41,15 +43,16 @@ Our current technology stack spans multiple domains, from core business operatio
 
 ```{r core-infrastructure, echo=FALSE}
 core_infra <- data.frame(
-  Technology = c("Google Workspace", "Slack", "GitHub", "Jira", "R", "Python", "Node.js", "Markdown"),
-  Category = c("Business Operations", "Team Communication", "Development & Version Control", "Project Management", "Data Analysis", "Development & Automation", "Backend Development", "Documentation"),
-  Description = c("Comprehensive suite providing email, document management, calendar, and collaboration tools", 
+  Technology = c("Google Workspace", "Slack", "GitHub", "Jira", "R", "Python", "Node.js", "TypeScript", "Markdown"),
+  Category = c("Business Operations", "Team Communication", "Development & Version Control", "Project Management", "Data Analysis", "Development & Automation", "Backend Development", "Programming Language", "Documentation"),
+  Description = c("Comprehensive suite providing email, document management, calendar, and collaboration tools",
                   "Real-time messaging platform for team communication, file sharing, and integration with development tools",
-                  "Code repository and version control system for technical development", 
-                  "Issue tracking and project management for development and operational workflows", 
-                  "Statistical computing environment used for data analysis and reporting", 
+                  "Code repository and version control system for technical development",
+                  "Issue tracking and project management for development and operational workflows",
+                  "Statistical computing environment used for data analysis and reporting",
                   "General-purpose programming language used for automation and backend processes",
                   "JavaScript runtime environment for building server-side applications and APIs",
+                  "Typed superset of JavaScript used for all modern web application development, providing compile-time type safety",
                   "Lightweight markup language used for documentation, README files, and knowledge management")
 )
 
@@ -72,13 +75,15 @@ The integration between these services creates a seamless workflow for our team.
 
 ### Team Communication
 
--   **Slack**: Our primary platform for real-time team communication, featuring:
+-   **Slack**: Our primary platform for internal team communication, featuring:
     -   Channel-based organization for projects and topics
     -   Direct messaging and group conversations
     -   File sharing and collaborative editing
     -   Integration with GitHub, Jira, and other development tools
     -   Custom workflows and automation through Slack apps
     -   Voice and video calling capabilities
+
+-   **Respond.io**: Omnichannel customer messaging platform for managing external communications with artists, labels, and partners across multiple channels from a unified inbox.
 
 ### Development Environment
 
@@ -88,6 +93,7 @@ Our technical development relies on several key tools:
 -   **R**: Statistical computing environment used for data analysis
 -   **Python**: General-purpose programming used for automation and data processing
 -   **Node.js**: JavaScript runtime environment for building server-side applications and APIs
+-   **TypeScript**: Typed superset of JavaScript, now the primary language for all modern web application development
 -   **JavaScript**: Client-side and server-side programming language for web applications
 -   **HTML/CSS**: Foundation technologies for web interface development
 -   **Markdown**: Documentation standard for README files, technical docs, and knowledge articles
@@ -130,22 +136,119 @@ Our web development stack includes:
     -   Integration with version control systems
     -   Easy conversion to HTML, PDF, and other formats
     -   Support for code blocks with syntax highlighting
-    
+
 -   **QMD (Quarto Markdown)**: Advanced documentation for data-driven reports:
     -   Embedded R and Python code execution
     -   Interactive visualizations and tables
     -   Multi-format output (HTML, PDF, Word)
     -   Academic and technical publishing capabilities
 
+## Client Dashboard Platform
+
+The client dashboard represents our most significant technology evolution, introducing a modern fullstack application stack for serving artists and labels with real-time data, royalty statements, and account management.
+
+```{r dashboard-stack, echo=FALSE}
+dashboard_stack <- data.frame(
+  Technology = c("Next.js 16", "React 19", "TypeScript 5", "Tailwind CSS 4", "shadcn/ui", "tRPC v11", "TanStack Query v5", "Supabase", "Zod v4", "Playwright"),
+  Category = c("Fullstack Framework", "UI Library", "Language", "Styling", "Component Library", "Type-safe API", "Data Fetching", "Backend-as-a-Service", "Validation", "E2E Testing"),
+  Description = c("React-based fullstack framework with App Router for server-side rendering, server components, and API routes",
+                  "Latest React version with concurrent features, used for building component-based user interfaces",
+                  "Strict-mode TypeScript across the entire codebase, providing compile-time type safety",
+                  "Utility-first CSS framework for rapid UI development with design system consistency",
+                  "Pre-built accessible component library built on Radix UI primitives with Tailwind CSS styling",
+                  "End-to-end type-safe API layer connecting the React frontend to Supabase backend services",
+                  "Asynchronous state management for server data, providing caching, background updates, and optimistic mutations",
+                  "PostgreSQL database, authentication, edge functions, real-time subscriptions, and file storage",
+                  "Runtime schema validation with TypeScript type inference, used for form validation and API contracts",
+                  "End-to-end browser testing framework for automated UI testing")
+)
+
+kable(dashboard_stack, caption = "Client Dashboard Technology Stack") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), font_size = 12, full_width = TRUE) %>%
+  column_spec(1, bold = TRUE, color = "#e4002b")
+```
+
+### Framework & Runtime
+
+-   **Next.js 16 (App Router)**: Our primary fullstack framework, providing server-side rendering, React Server Components, file-based routing, and built-in API capabilities. The App Router architecture enables route groups for separating public and authenticated areas of the application.
+
+-   **React 19**: Latest version of React with concurrent rendering features, used as the core UI library across all dashboard components.
+
+-   **TypeScript 5 (Strict Mode)**: All dashboard code is written in strict TypeScript, with generated database types from Supabase ensuring end-to-end type safety from database to UI.
+
+### UI & Styling
+
+-   **Tailwind CSS 4**: Utility-first CSS framework used for all styling, with the `@tailwindcss/vite` plugin for optimized builds.
+
+-   **shadcn/ui + Radix UI**: Pre-built, accessible component library providing consistent UI primitives (dialogs, dropdowns, tabs, toasts, etc.) styled with Tailwind and `class-variance-authority` for variant management.
+
+-   **Lucide React**: Icon library used throughout the interface.
+
+-   **Chart.js + react-chartjs-2**: Data visualization for royalty analytics, streaming performance, and financial reporting dashboards.
+
+-   **react-simple-maps**: Geographic visualizations for regional streaming analytics.
+
+### API & Data Layer
+
+-   **tRPC v11**: Type-safe API layer that eliminates the need for manual API contracts. tRPC routers define server procedures that are directly callable from React components with full TypeScript inference.
+
+-   **TanStack Query v5 (React Query)**: Manages all server state, providing automatic caching, background refetching, and optimistic updates. Integrated with tRPC for seamless data fetching.
+
+-   **TanStack Table v8**: Headless table library for building complex, sortable, and filterable data grids for royalty statements, catalogue listings, and activity logs.
+
+### State Management
+
+-   **Zustand v5**: Lightweight state management used for client-side application state, particularly authentication state management.
+
+-   **Jotai v2**: Atomic state management for fine-grained reactive state where component-level state sharing is needed.
+
+### Forms & Validation
+
+-   **React Hook Form v7**: Performant form library with minimal re-renders, used across all dashboard forms.
+
+-   **Zod v4**: Runtime schema validation with TypeScript type inference. Zod schemas are co-located with tRPC routers for API validation and shared with frontend forms via `@hookform/resolvers`.
+
+### Backend & Database
+
+-   **Supabase**: Backend-as-a-Service providing:
+    -   **PostgreSQL Database**: Primary relational database with generated TypeScript types
+    -   **Supabase Auth**: Authentication and session management with SSR support via `@supabase/ssr`
+    -   **Edge Functions**: Serverless compute for backend logic
+    -   **Real-time Subscriptions**: Live data updates via WebSocket connections
+    -   **Storage**: File upload and management for assets
+    -   **Supabase CLI**: Local development environment and database migrations
+
+### Email & Notifications
+
+-   **React Email + Resend**: Professional email templating with React components, delivered via the Resend API. Used for registration invites, password resets, and collaboration invitations.
+
+-   **Slack Webhooks**: Integration for support notifications and operational alerts.
+
+### Testing & Quality
+
+-   **Playwright**: End-to-end browser testing framework configured with Chromium for automated UI testing, with screenshot and video capture on failure.
+
+-   **ESLint v9**: Code linting with `eslint-config-next` for Next.js-specific rules.
+
+### Architecture Patterns
+
+The client dashboard follows a clean architecture approach with clear separation of concerns:
+
+-   **Server Layer**: Domain models, application use cases, repository pattern, and infrastructure services (email, auth, storage, logging)
+-   **Shared Layer**: Zod schemas and TypeScript types shared between server and client
+-   **Client Layer**: React components organized by feature (auth, accounts, profile, notifications, catalogue)
+-   **Activity Logging**: Comprehensive audit trail infrastructure built into the domain layer
+
 ## Music Distribution Infrastructure
 
 ```{r distribution-infra, echo=FALSE}
 distribution_infra <- data.frame(
-  Technology = c("Audio Salad", "Curve", "rowZero", "Internal APIs", "Express.js"),
-  Category = c("Digital Distribution", "Royalty Management", "Analytics", "Integration", "API Framework"),
-  Description = c("Digital distribution platform for delivering music to DSPs", 
-                  "Royalty calculation system", 
-                  "Large file data analytics platform", 
+  Technology = c("Audio Salad", "Curve", "SongStats", "rowZero", "Internal APIs", "Express.js"),
+  Category = c("Digital Distribution", "Royalty Management", "Streaming Analytics", "Data Analytics", "Integration", "API Framework"),
+  Description = c("Digital distribution platform for delivering music to DSPs",
+                  "Royalty calculation system",
+                  "Real-time streaming analytics platform providing cross-DSP performance data, playlist tracking, and trend insights",
+                  "Large file data analytics platform",
                   "Custom-built APIs for internal system integration",
                   "Node.js web application framework for building APIs")
 )
@@ -173,6 +276,7 @@ Our royalty processing depends on:
 
 Our current analytics capabilities include:
 
+-   **SongStats**: Real-time streaming analytics platform that aggregates performance data across multiple DSPs, providing playlist tracking, chart positions, trend detection, and cross-platform insights for artists and labels
 -   **rowZero**: Data analytics platform that allows analysis of large files that cannot be processed locally
 -   **R-based Dashboards**: Custom reporting solutions built on R for specialized analytics
 -   **Python Data Processing**: Scripts for data cleaning, transformation, and analysis
@@ -192,11 +296,12 @@ Our current development stack includes:
 
 ```{r data-infrastructure, echo=FALSE}
 data_infra <- data.frame(
-  Technology = c("MariaDB", "CSV-based Data Storage", "Pandas (Python)", "R Libraries"),
-  Category = c("Database", "Data Storage", "Data Processing", "Data Analysis"),
-  Description = c("Relational database for structured data storage", 
-                  "File-based data storage for analytics and reporting", 
-                  "Python library for data manipulation and analysis", 
+  Technology = c("Supabase (PostgreSQL)", "MariaDB", "CSV-based Data Storage", "Pandas (Python)", "R Libraries"),
+  Category = c("Cloud Database", "Database", "Data Storage", "Data Processing", "Data Analysis"),
+  Description = c("Managed PostgreSQL database via Supabase, serving as the primary data store for the client dashboard with real-time capabilities and auto-generated TypeScript types",
+                  "Relational database for structured data storage in legacy systems",
+                  "File-based data storage for analytics and reporting",
+                  "Python library for data manipulation and analysis",
                   "Specialized R packages for statistical analysis and visualization")
 )
 
@@ -205,8 +310,9 @@ kable(data_infra, caption = "Data Infrastructure") %>%
   column_spec(1, bold = TRUE, color = "#e4002b")
 ```
 
-Our current data infrastructure relies on a combination of database systems and file-based storage:
+Our data infrastructure combines cloud-managed databases with traditional systems and file-based storage:
 
+-   **Supabase (PostgreSQL)**: Primary database for the client dashboard, providing managed PostgreSQL with Row Level Security, real-time subscriptions, auto-generated TypeScript types, and integrated authentication
 -   **MariaDB**: Used for specific applications requiring relational data structures
 -   **CSV-based Data Storage**: Significant portion of our analytics data is stored in CSV format
 -   **Python Data Stack**: Pandas, NumPy, and other libraries for data processing
@@ -216,9 +322,9 @@ Our current data infrastructure relies on a combination of database systems and 
 
 ```{r external-platforms, echo=FALSE}
 external_platforms <- data.frame(
-  Platform = c("Merlin", "DSP Direct Relationships", "Publishing Partnerships", "Cloud Infrastructure (Limited)"),
-  Category = c("Licensing", "Distribution", "Rights Management", "Infrastructure"),
-  Relationship = c("Member", "Direct Integrations", "Partnership", "Service Subscription")
+  Platform = c("Merlin", "DSP Direct Relationships", "Publishing Partnerships", "Ebury", "Resend", "Respond.io", "SongStats", "Vercel", "Render", "Netlify", "GitHub Pages"),
+  Category = c("Licensing", "Distribution", "Rights Management", "International Payments", "Transactional Email", "Customer Messaging", "Streaming Analytics", "Cloud Hosting", "Cloud Hosting", "Cloud Hosting", "Static Hosting"),
+  Relationship = c("Member", "Direct Integrations", "Partnership", "Service Subscription", "Service Subscription", "Service Subscription", "Service Subscription", "Service Subscription", "Service Subscription", "Service Subscription", "Service Subscription")
 )
 
 kable(external_platforms, caption = "External Platforms & Partnerships") %>%
@@ -226,13 +332,39 @@ kable(external_platforms, caption = "External Platforms & Partnerships") %>%
   column_spec(1, bold = TRUE, color = "#e4002b")
 ```
 
-While not directly part of our technology stack, several external platforms are critical to our operations:
+Several external platforms and services are critical to our operations:
+
+### Industry Partnerships
 
 -   **Merlin**: As a member, we leverage this platform for improved terms with major DSPs and enhanced promotional opportunities for our artists.
 
 -   **Direct DSP Relationships**: We maintain direct relationships with several digital service providers, particularly those with strong presence in the Pacific region.
 
--   **Cloud Infrastructure**: Limited use of cloud services for specific applications and storage needs.
+### Financial Services
+
+-   **Ebury**: International payments and foreign exchange platform used for managing cross-border royalty payments and currency conversions across multiple territories.
+
+### Communication & Email
+
+-   **Resend**: Developer-first transactional email service used for delivering system emails (registration invites, password resets, collaboration invitations) via React Email templates.
+
+-   **Respond.io**: Omnichannel customer messaging platform for managing external communications with artists, labels, and partners.
+
+### Analytics
+
+-   **SongStats**: Real-time streaming analytics providing cross-DSP performance data, playlist tracking, and trend insights for artists and labels.
+
+### Cloud Hosting & Deployment
+
+Our applications are deployed across multiple cloud hosting platforms depending on the project requirements:
+
+-   **Vercel**: Primary hosting platform for Next.js applications, providing edge deployment, serverless functions, and automatic preview deployments for the client dashboard.
+
+-   **Render**: Cloud application platform used for hosting backend services, APIs, and background workers.
+
+-   **Netlify**: Static site hosting and deployment platform used for marketing sites and documentation.
+
+-   **GitHub Pages**: Free static hosting directly from GitHub repositories, used for project documentation and the knowledge repository.
 
 ## System Architecture Overview
 
@@ -242,125 +374,191 @@ Our current technology infrastructure follows this general architecture:
 diagram <- grViz("
   digraph tech_stack {
     # Node attributes
-    node [shape = rectangle, fontname = 'Helvetica', style = filled, fillcolor = '#f5f5f5', color = '#e4002b', fontcolor = '#222222', penwidth = 1.5]
-    
+    node [shape=rectangle, fontname='Helvetica', style=filled, fillcolor='#f5f5f5', color='#e4002b', fontcolor='#222222', penwidth=1.5]
+
     # Edge attributes
-    edge [color = '#222222', penwidth = 1]
-    
+    edge [color='#222222', penwidth=1]
+
     # Cluster for Business Operations
     subgraph cluster_business {
-      label = 'Business Operations'
-      style = filled
-      color = '#e4002b'
-      fillcolor = '#f9f9f9'
-      fontcolor = '#222222'
-      
-      Google [label = 'Google Workspace']
-      Slack [label = 'Slack']
-      Jira [label = 'Jira']
+      label='Business Operations'
+      style=filled
+      color='#e4002b'
+      fillcolor='#f9f9f9'
+      fontcolor='#222222'
+
+      Google [label='Google Workspace']
+      Slack [label='Slack']
+      Jira [label='Jira']
     }
-    
+
     # Cluster for Development
     subgraph cluster_development {
-      label = 'Development Environment'
-      style = filled
-      color = '#e4002b'
-      fillcolor = '#f9f9f9'
-      fontcolor = '#222222'
-      
-      GitHub [label = 'GitHub']
-      R [label = 'R']
-      Python [label = 'Python']
-      NodeJS [label = 'Node.js']
-      Express [label = 'Express.js']
-      JavaScript [label = 'JavaScript']
-      Markdown [label = 'Markdown/QMD']
+      label='Development Environment'
+      style=filled
+      color='#e4002b'
+      fillcolor='#f9f9f9'
+      fontcolor='#222222'
+
+      GitHub [label='GitHub']
+      R [label='R']
+      Python [label='Python']
+      NodeJS [label='Node.js']
+      TypeScript [label='TypeScript']
+      Markdown [label='Markdown/QMD']
     }
-    
-    # Cluster for Frontend
+
+    # Cluster for Client Dashboard
+    subgraph cluster_dashboard {
+      label='Client Dashboard Platform'
+      style=filled
+      color='#e4002b'
+      fillcolor='#f9f9f9'
+      fontcolor='#222222'
+
+      NextJS [label='Next.js 16']
+      ReactJS [label='React 19']
+      Tailwind [label='Tailwind CSS']
+      ShadcnUI [label='shadcn/ui']
+      TRPC [label='tRPC']
+      ReactQuery [label='TanStack Query']
+      Zustand [label='Zustand']
+      ReactEmail [label='React Email']
+      Playwright [label='Playwright']
+    }
+
+    # Cluster for Legacy Frontend
     subgraph cluster_frontend {
-      label = 'Web Technologies'
-      style = filled
-      color = '#e4002b'
-      fillcolor = '#f9f9f9'
-      fontcolor = '#222222'
-      
-      HTML [label = 'HTML5']
-      CSS [label = 'CSS3']
-      ChartJS [label = 'Chart.js']
+      label='Legacy Web Technologies'
+      style=filled
+      color='#e4002b'
+      fillcolor='#f9f9f9'
+      fontcolor='#222222'
+
+      Express [label='Express.js']
+      HTML [label='HTML5']
+      CSS [label='CSS3']
+      ChartJS [label='Chart.js']
     }
-    
+
     # Cluster for Data
     subgraph cluster_data {
-      label = 'Data Infrastructure'
-      style = filled
-      color = '#e4002b'
-      fillcolor = '#f9f9f9'
-      fontcolor = '#222222'
-      
-      MariaDB [label = 'MariaDB']
-      CSV [label = 'CSV Storage']
-      Pandas [label = 'Pandas/NumPy']
+      label='Data Infrastructure'
+      style=filled
+      color='#e4002b'
+      fillcolor='#f9f9f9'
+      fontcolor='#222222'
+
+      Supabase [label='Supabase']
+      PostgreSQL [label='PostgreSQL']
+      MariaDB [label='MariaDB']
+      CSV [label='CSV Storage']
+      Pandas [label='Pandas/NumPy']
     }
-    
+
     # Cluster for Distribution
     subgraph cluster_distribution {
-      label = 'Music Distribution'
-      style = filled
-      color = '#e4002b'
-      fillcolor = '#f9f9f9'
-      fontcolor = '#222222'
-      
-      AudioSalad [label = 'Audio Salad']
-      Curve [label = 'Curve']
-      rowZero [label = 'rowZero']
-      APIs [label = 'Internal APIs']
+      label='Music Distribution'
+      style=filled
+      color='#e4002b'
+      fillcolor='#f9f9f9'
+      fontcolor='#222222'
+
+      AudioSalad [label='Audio Salad']
+      Curve [label='Curve']
+      rowZero [label='rowZero']
+      APIs [label='Internal APIs']
     }
-    
-    # Cluster for External
+
+    # Cluster for Hosting & Deployment
+    subgraph cluster_hosting {
+      label='Cloud Hosting'
+      style=filled
+      color='#e4002b'
+      fillcolor='#f9f9f9'
+      fontcolor='#222222'
+
+      Vercel [label='Vercel']
+      RenderCloud [label='Render']
+      Netlify [label='Netlify']
+      GHPages [label='GitHub Pages']
+    }
+
+    # Cluster for External Services
     subgraph cluster_external {
-      label = 'External Platforms'
-      style = filled
-      color = '#e4002b'
-      fillcolor = '#f9f9f9'
-      fontcolor = '#222222'
-      
-      Merlin [label = 'Merlin']
-      DSPs [label = 'DSPs']
-      Cloud [label = 'Limited Cloud']
+      label='External Services'
+      style=filled
+      color='#e4002b'
+      fillcolor='#f9f9f9'
+      fontcolor='#222222'
+
+      Merlin [label='Merlin']
+      DSPs [label='DSPs']
+      Resend [label='Resend']
+      Ebury [label='Ebury']
+      RespondIO [label='Respond.io']
+      SongStats [label='SongStats']
     }
-    
-    # Connections
-    Google -> Jira [label = 'Auth']
-    Google -> GitHub [label = 'Auth']
-    Slack -> GitHub [label = 'Notifications']
-    Slack -> Jira [label = 'Updates']
+
+    # Business connections
+    Google -> Jira [label='Auth']
+    Google -> GitHub [label='Auth']
+    Slack -> GitHub [label='Notifications']
+    Slack -> Jira [label='Updates']
+
+    # Development connections
     GitHub -> R
     GitHub -> Python
     GitHub -> NodeJS
+    GitHub -> TypeScript
     GitHub -> Markdown
-    NodeJS -> Express [label = 'Runtime']
-    NodeJS -> JavaScript
-    JavaScript -> HTML
-    JavaScript -> CSS
-    JavaScript -> ChartJS
-    Express -> APIs [label = 'Framework']
-    R -> rowZero [label = 'Analysis']
+
+    # Client Dashboard connections
+    TypeScript -> NextJS [label='Language']
+    NodeJS -> NextJS [label='Runtime']
+    NextJS -> ReactJS [label='Framework']
+    ReactJS -> Tailwind [label='Styling']
+    ReactJS -> ShadcnUI [label='Components']
+    NextJS -> TRPC [label='API Layer']
+    TRPC -> ReactQuery [label='Data Fetching']
+    ReactJS -> Zustand [label='State']
+    TRPC -> Supabase [label='Backend']
+    ReactEmail -> Resend [label='Delivery']
+    Playwright -> NextJS [label='E2E Tests']
+
+    # Supabase connections
+    Supabase -> PostgreSQL [label='Database']
+
+    # Hosting connections
+    NextJS -> Vercel [label='Deploy']
+    Express -> RenderCloud [label='Deploy']
+    Markdown -> GHPages [label='Publish']
+
+    # Legacy connections
+    NodeJS -> Express [label='Runtime']
+    Express -> APIs [label='Framework']
+    Express -> ChartJS
+
+    # Data connections
+    R -> rowZero [label='Analysis']
     Python -> Pandas
-    Pandas -> CSV [label = 'Processing']
-    Python -> AudioSalad [label = 'Integration']
+    Pandas -> CSV [label='Processing']
+    Python -> AudioSalad [label='Integration']
     MariaDB -> APIs
+
+    # Distribution connections
     APIs -> AudioSalad
     APIs -> Curve
-    AudioSalad -> DSPs [label = 'Distribution']
-    AudioSalad -> Curve [label = 'Sales Data']
-    Curve -> rowZero [label = 'Financial Data']
-    Merlin -> DSPs [label = 'Licensing']
-    Cloud -> APIs [label = 'Hosting']
-    Markdown -> GitHub [label = 'Documentation']
-    
+    AudioSalad -> DSPs [label='Distribution']
+    AudioSalad -> Curve [label='Sales Data']
+    Curve -> rowZero [label='Financial Data']
+    Curve -> Ebury [label='Payments']
+    Merlin -> DSPs [label='Licensing']
+    SongStats -> DSPs [label='Analytics']
+    Markdown -> GitHub [label='Documentation']
+
     # Graph attributes
-    graph [rankdir = TB, bgcolor = transparent, size = '12,12']
+    graph [rankdir=TB, bgcolor=transparent, size='16,16']
   }
 ")
 
@@ -373,17 +571,23 @@ This architecture illustrates the interconnections between our various systems, 
 
 ```{r glossary-table, echo=FALSE}
 glossary_terms <- data.frame(
-  Term = c("API", "API Gateway", "CI/CD", "Cloud Infrastructure", "Container", "CSS", "DevOps", "DSP", "ETL", "GCP", "GraphQL", "HTML", "JavaScript", "Kubernetes", "Machine Learning", "Markdown", "Microservices", "Node.js", "NoSQL", "REST API", "RESTful", "SaaS", "Serverless Computing", "Slack", "TCO"),
+  Term = c("API", "API Gateway", "App Router", "BaaS", "CI/CD", "Cloud Infrastructure", "Container", "CSS", "DevOps", "DSP", "E2E Testing", "Edge Deployment", "Edge Functions", "ETL", "FX", "GCP", "GraphQL", "HTML", "JavaScript", "Kubernetes", "Machine Learning", "Markdown", "Microservices", "Next.js", "Node.js", "NoSQL", "Omnichannel", "ORM", "PostgreSQL", "Radix UI", "React", "REST API", "RESTful", "SaaS", "Server Components", "Serverless Computing", "Slack", "SSR", "Static Site Hosting", "Supabase", "Tailwind CSS", "TCO", "tRPC", "TypeScript", "Zod"),
   Definition = c(
     "Application Programming Interface. A set of rules that allows different software applications to communicate with each other.",
     "A service that manages, secures, and optimizes API traffic between clients and backend services.",
+    "Next.js routing paradigm using React Server Components and file-system based routing with layouts, loading states, and error boundaries.",
+    "Backend as a Service. A cloud service model providing ready-made backend infrastructure including databases, authentication, and APIs.",
     "Continuous Integration/Continuous Deployment. A method of frequently delivering applications by automating testing and deployment processes.",
     "Computing resources (servers, storage, databases, networking) delivered over the internet.",
     "A standardized unit of software that packages code and dependencies so applications run quickly and reliably across computing environments.",
     "Cascading Style Sheets. A language used to describe the presentation and styling of HTML documents.",
     "A set of practices that combines software development (Dev) and IT operations (Ops) to shorten the development lifecycle.",
     "Digital Service Provider. Platforms that distribute digital music (e.g., Spotify, Apple Music, Amazon Music).",
+    "End-to-End Testing. Automated testing that simulates real user interactions with the complete application in a browser environment.",
+    "Deploying applications to servers distributed globally at the network edge, closer to users, for reduced latency and faster response times.",
+    "Serverless functions that run at the network edge, closer to users, for reduced latency. Used by Supabase for backend compute.",
     "Extract, Transform, Load. A process that extracts data from sources, transforms it to a suitable structure, and loads it into a target database.",
+    "Foreign Exchange. The conversion of one currency into another, relevant for managing international royalty payments across territories.",
     "Google Cloud Platform. A suite of cloud computing services offered by Google.",
     "A query language for APIs that enables clients to request exactly the data they need.",
     "HyperText Markup Language. The standard markup language for creating web pages and web applications.",
@@ -392,14 +596,28 @@ glossary_terms <- data.frame(
     "A subset of artificial intelligence that enables systems to learn from data, identify patterns, and make decisions with minimal human intervention.",
     "A lightweight markup language with plain-text formatting syntax for creating formatted documents.",
     "An architectural approach where software is composed of small, independent services that communicate over well-defined APIs.",
+    "A React-based fullstack web framework providing server-side rendering, static generation, and API routes with file-system based routing.",
     "A JavaScript runtime environment that executes JavaScript code outside a web browser.",
     "Non-SQL or non-relational databases that store data in formats other than tables, allowing for greater flexibility.",
+    "A communication strategy that integrates multiple messaging channels (email, chat, social media, SMS) into a single unified platform.",
+    "Object-Relational Mapping. A technique that lets developers interact with a database using programming language objects instead of SQL.",
+    "An advanced open-source relational database system known for reliability, feature robustness, and performance.",
+    "A library of unstyled, accessible UI component primitives for React, used as the foundation for shadcn/ui components.",
+    "A JavaScript library for building component-based user interfaces with a declarative, efficient approach to DOM updates.",
     "Representational State Transfer API. An architectural style for designing networked applications using HTTP methods.",
     "Refers to web services implementing REST architecture, characterized by statelessness and standard HTTP methods.",
     "Software as a Service. A software distribution model where applications are hosted by a provider and made available over the internet.",
+    "React components that render on the server, reducing client-side JavaScript bundle size and enabling direct database access from components.",
     "A cloud-native development model where applications are hosted by a third-party service, eliminating infrastructure management for developers.",
     "A cloud-based team collaboration platform that provides messaging, file sharing, and integration with various productivity tools.",
-    "Total Cost of Ownership. The purchase price plus all costs associated with using and maintaining something over its lifetime."
+    "Server-Side Rendering. Generating HTML on the server for each request, improving initial load performance and SEO.",
+    "Hosting for pre-built HTML, CSS, and JavaScript files served directly from a CDN without server-side processing, used by platforms like Netlify and GitHub Pages.",
+    "An open-source Backend-as-a-Service built on PostgreSQL, providing database, authentication, storage, edge functions, and real-time capabilities.",
+    "A utility-first CSS framework that provides low-level utility classes for building custom designs directly in markup.",
+    "Total Cost of Ownership. The purchase price plus all costs associated with using and maintaining something over its lifetime.",
+    "TypeScript Remote Procedure Call. A framework for building type-safe APIs where the server and client share TypeScript types without code generation.",
+    "A typed superset of JavaScript that compiles to plain JavaScript, adding static type checking and enhanced IDE support.",
+    "A TypeScript-first schema validation library that provides runtime type checking with automatic TypeScript type inference."
   )
 )
 
@@ -412,14 +630,16 @@ kable(glossary_terms, caption = "Glossary of Technical Terms") %>%
 
 ```{r music-distribution-glossary, echo=FALSE}
 music_terms <- data.frame(
-  Term = c("Audio Salad", "Curve", "Merlin", "Metadata", "rowZero", "Royalty Split", "Streaming Analytics", "ISRC", "UPC", "Advance Funding"),
+  Term = c("Audio Salad", "Curve", "Ebury", "Merlin", "Metadata", "rowZero", "Royalty Split", "SongStats", "Streaming Analytics", "ISRC", "UPC", "Advance Funding"),
   Definition = c(
     "A digital distribution platform that delivers music to streaming services and digital stores, handling metadata management and asset delivery.",
     "A royalty management system that calculates and processes royalty payments for artists and rights holders.",
+    "An international payments and foreign exchange platform used for managing cross-border royalty payments and currency conversions across multiple territories.",
     "A global digital rights agency for independent music, negotiating with digital services on behalf of indie labels and distributors.",
     "Information about music files including artist name, track title, album name, genre, release date, and other identifying information.",
     "A data analytics platform specifically designed for large file processing and music industry analytics.",
     "The division of royalty earnings among multiple contributors to a musical work, including artists, producers, and songwriters.",
+    "A real-time streaming analytics platform that aggregates performance data across multiple DSPs, providing playlist tracking, chart positions, and trend detection.",
     "The collection and analysis of data related to music streaming, including play counts, listener demographics, and geographic distribution.",
     "International Standard Recording Code. A unique identifier for sound recordings and music video recordings.",
     "Universal Product Code. A barcode symbol used for tracking trade items in stores, commonly used for physical music releases.",
@@ -436,25 +656,41 @@ kable(music_terms, caption = "Music Distribution Terminology") %>%
 
 ```{r references-table, echo=FALSE}
 references <- data.frame(
-  Category = c("Cloud Computing", "Cloud Computing", "Cloud Computing", "Development Tools", "Development Tools", "Development Tools", "Development Tools", "Development Tools", "Music Distribution", "Music Distribution", "Database Technologies", "Database Technologies", "Analytics", "Payment Processing", "Infrastructure", "Business Intelligence", "Team Collaboration"),
+  Category = c("Cloud Computing", "Cloud Computing", "Cloud Computing", "Cloud Hosting", "Cloud Hosting", "Cloud Hosting", "Cloud Hosting", "Development Tools", "Development Tools", "Development Tools", "Development Tools", "Development Tools", "Development Tools", "Development Tools", "Development Tools", "Development Tools", "Development Tools", "Development Tools", "Development Tools", "Development Tools", "Music Distribution", "Music Distribution", "Music Distribution", "Database Technologies", "Database Technologies", "Database Technologies", "Analytics", "Payment Processing", "Payment Processing", "Infrastructure", "Business Intelligence", "Customer Communication", "Team Collaboration"),
   Source = c(
-    "Amazon Web Services. (2025). *AWS Cloud Computing.* https://aws.amazon.com/",
-    "Google Cloud. (2025). *Google Cloud Platform.* https://cloud.google.com/",
-    "Microsoft. (2025). *Microsoft Azure.* https://azure.microsoft.com/",
-    "Node.js Foundation. (2025). *Node.js Documentation.* https://nodejs.org/",
-    "React. (2025). *React - A JavaScript library for building user interfaces.* https://reactjs.org/",
-    "Express.js. (2025). *Express - Node.js web application framework.* https://expressjs.com/",
-    "MDN Web Docs. (2025). *HTML: HyperText Markup Language.* https://developer.mozilla.org/en-US/docs/Web/HTML",
-    "MDN Web Docs. (2025). *CSS: Cascading Style Sheets.* https://developer.mozilla.org/en-US/docs/Web/CSS",
-    "Audio Salad. (2025). *Digital Music Distribution and Label Services.* https://www.audiosalad.com/",
-    "Merlin. (2025). *The global digital rights agency for the independent label sector.* https://www.merlinnetwork.org/",
-    "MariaDB Foundation. (2025). *MariaDB Server: The open source relational database.* https://mariadb.org/",
-    "MongoDB. (2025). *MongoDB: The Developer Data Platform.* https://www.mongodb.com/",
-    "TensorFlow. (2025). *An end-to-end platform for machine learning.* https://www.tensorflow.org/",
-    "Trolley. (2025). *Global Payouts & Compliance Platform for Businesses.* https://trolley.com/",
-    "Kubernetes. (2025). *Production-Grade Container Orchestration.* https://kubernetes.io/",
-    "Clic Data. (2025). *Business Intelligence for Decision Makers.* https://www.clicdata.com/",
-    "Slack. (2025). *Slack: Where work happens.* https://slack.com/"
+    "Amazon Web Services. (2026). *AWS Cloud Computing.* https://aws.amazon.com/",
+    "Google Cloud. (2026). *Google Cloud Platform.* https://cloud.google.com/",
+    "Microsoft. (2026). *Microsoft Azure.* https://azure.microsoft.com/",
+    "Vercel. (2026). *Develop. Preview. Ship.* https://vercel.com/",
+    "Render. (2026). *Cloud Application Hosting for Developers.* https://render.com/",
+    "Netlify. (2026). *Develop and deploy websites and apps.* https://www.netlify.com/",
+    "GitHub. (2026). *GitHub Pages - Websites for you and your projects.* https://pages.github.com/",
+    "Next.js. (2026). *The React Framework for the Web.* https://nextjs.org/",
+    "React. (2026). *React - A JavaScript library for building user interfaces.* https://react.dev/",
+    "TypeScript. (2026). *TypeScript: JavaScript With Syntax For Types.* https://www.typescriptlang.org/",
+    "Tailwind CSS. (2026). *A utility-first CSS framework.* https://tailwindcss.com/",
+    "tRPC. (2026). *Move fast and break nothing. End-to-end typesafe APIs.* https://trpc.io/",
+    "Supabase. (2026). *The Open Source Firebase Alternative.* https://supabase.com/",
+    "TanStack. (2026). *TanStack Query - Powerful asynchronous state management.* https://tanstack.com/query",
+    "Resend. (2026). *Email for developers.* https://resend.com/",
+    "Playwright. (2026). *Reliable end-to-end testing for modern web apps.* https://playwright.dev/",
+    "Node.js Foundation. (2026). *Node.js Documentation.* https://nodejs.org/",
+    "Express.js. (2026). *Express - Node.js web application framework.* https://expressjs.com/",
+    "MDN Web Docs. (2026). *HTML: HyperText Markup Language.* https://developer.mozilla.org/en-US/docs/Web/HTML",
+    "MDN Web Docs. (2026). *CSS: Cascading Style Sheets.* https://developer.mozilla.org/en-US/docs/Web/CSS",
+    "Audio Salad. (2026). *Digital Music Distribution and Label Services.* https://www.audiosalad.com/",
+    "Merlin. (2026). *The global digital rights agency for the independent label sector.* https://www.merlinnetwork.org/",
+    "SongStats. (2026). *Real-time music analytics for artists and labels.* https://songstats.com/",
+    "MariaDB Foundation. (2026). *MariaDB Server: The open source relational database.* https://mariadb.org/",
+    "PostgreSQL. (2026). *The World's Most Advanced Open Source Relational Database.* https://www.postgresql.org/",
+    "MongoDB. (2026). *MongoDB: The Developer Data Platform.* https://www.mongodb.com/",
+    "TensorFlow. (2026). *An end-to-end platform for machine learning.* https://www.tensorflow.org/",
+    "Trolley. (2026). *Global Payouts & Compliance Platform for Businesses.* https://trolley.com/",
+    "Ebury. (2026). *International payments and FX for businesses.* https://www.ebury.com/",
+    "Kubernetes. (2026). *Production-Grade Container Orchestration.* https://kubernetes.io/",
+    "Clic Data. (2026). *Business Intelligence for Decision Makers.* https://www.clicdata.com/",
+    "Respond.io. (2026). *Leading Business Messaging Platform.* https://respond.io/",
+    "Slack. (2026). *Slack: Where work happens.* https://slack.com/"
   )
 )
 
