@@ -86,11 +86,15 @@
       }
 
       function formatTitle(filename) {
+        const acronyms = ['api', 'sdk', 'cli', 'css', 'html', 'sql', 'url', 'faq', 'sdlc'];
         return filename
           .replace(/\.(md|qmd)$/, '')
           .replace(/-/g, ' ')
           .replace(/_/g, ' ')
-          .replace(/\b\w/g, l => l.toUpperCase());
+          .replace(/\b\w/g, l => l.toUpperCase())
+          .replace(/\b\w+\b/g, word =>
+            acronyms.includes(word.toLowerCase()) ? word.toUpperCase() : word
+          );
       }
 
       function formatFileSize(bytes) {
