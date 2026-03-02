@@ -36,6 +36,14 @@
       </article>
     </div>
 
+    <button
+      id="back-to-top"
+      onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"
+      aria-label="Back to top"
+    >
+      ↑
+    </button>
+
     <script>
       const GITHUB_REPO = 'Precise-Digital-Developers/knowledge-repo';
       const GITHUB_BRANCH = 'main';
@@ -158,6 +166,12 @@
       if (localStorage.getItem('theme') === 'dark') {
         document.body.classList.add('dark-theme');
       }
+
+      // Back to top button visibility
+      const backToTop = document.getElementById('back-to-top');
+      window.addEventListener('scroll', () => {
+        backToTop.classList.toggle('visible', window.scrollY > 400);
+      });
 
       loadArticle();
     </script>
