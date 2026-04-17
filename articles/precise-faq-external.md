@@ -398,13 +398,18 @@ NZ On Air music funding supports the recording and promotion of single songs and
 
 Core NZ On Air music funding options:
 
-- **[NZ Music Single](https://www.nzonair.govt.nz/funding/music-funding/new-music-single-funding/)** — up to $11,000 to create, record, release and promote a new single. Variants exist for [Pasifika](https://www.nzonair.govt.nz/funding/music-funding/new-music-pasifika-funding/), [Pan-Asian](https://www.nzonair.govt.nz/funding/music-funding/new-music-pan-asian-funding/), and [kids' content](https://www.nzonair.govt.nz/funding/music-funding/new-music-kids-funding/).
+- **[NZ Music Single](https://www.nzonair.govt.nz/funding/music-funding/new-music-single-funding/)** — up to $11,000 to create, record, release and promote a new single. Dedicated variants exist for:
+  - Artists of [Pasifika descent](https://www.nzonair.govt.nz/funding/music-funding/new-music-pasifika-funding/)
+  - Artists who self-identify as [Pan-Asian](https://www.nzonair.govt.nz/funding/music-funding/new-music-pan-asian-funding/)
+  - Artists with a [children's content](https://www.nzonair.govt.nz/funding/music-funding/new-music-kids-funding/) focus
 - **[Waiata Takitahi](https://www.nzonair.govt.nz/funding/music-funding/waiata-takitahi/)** — up to $15,000 for a single song, jointly funded by NZ On Air and Te Māngai Pāho. For artists recording bilingual singles with a minimum of 25% te reo Māori lyrics and general audience appeal.
 - **[New Music Project Funding](https://www.nzonair.govt.nz/funding/music-funding/new-music-project-funding/)** — $11,000 to $55,000 for multi-song projects (EPs and albums), with a [kids' variant](https://www.nzonair.govt.nz/funding/music-funding/new-music-project-kids-funding/).
 
 ### What is APRA AMCOS?
 
-[APRA AMCOS](https://www.apraamcos.co.nz/) — the Australasian Performing Right Association and Australasian Mechanical Copyright Owners Society — is a PRO and collective licensing organisation based in New Zealand and Australia. It represents songwriters, composers and music publishers, making sure they're compensated for the use of their music in public performances, broadcasts, and mechanical reproductions (streaming and downloads included).
+[APRA AMCOS](https://www.apraamcos.co.nz/) — the Australasian Performing Right Association and Australasian Mechanical Copyright Owners Society — is a PRO and collective licensing organisation based in New Zealand and Australia.
+
+It represents songwriters, composers and music publishers, making sure they're compensated for the use of their music in public performances, broadcasts, and mechanical reproductions (streaming and downloads included).
 
 Core activities:
 
@@ -418,7 +423,9 @@ Core activities:
 
 ### What is Recorded Music NZ?
 
-[Recorded Music NZ](https://www.recordedmusic.co.nz/) is the NZ CMO, trade association, licensing and advocacy body for record labels and artists. The organisation manages public performance and broadcast licensing when its members' sound recordings are used, distributes those royalties, and promotes NZ music through initiatives like the Aotearoa Music Awards and the Official Aotearoa Music Charts.
+[Recorded Music NZ](https://www.recordedmusic.co.nz/) is the NZ CMO, trade association, licensing and advocacy body for record labels and artists.
+
+The organisation manages public performance and broadcast licensing when its members' sound recordings are used, distributes those royalties, and promotes NZ music through initiatives like the Aotearoa Music Awards and the Official Aotearoa Music Charts.
 
 Core activities:
 
