@@ -54,14 +54,19 @@ jobs:
           fetch-depth: 0
 
       - name: Install Gitleaks
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          GITLEAKS_VERSION=$(curl -s https://api.github.com/repos/gitleaks/gitleaks/releases/latest | grep -oP '"tag_name": "v\K[^"]+')
+          GITLEAKS_VERSION=$(curl -fsSL \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            https://api.github.com/repos/gitleaks/gitleaks/releases/latest \
+            | jq -r '.tag_name' | sed 's/^v//')
           curl -sSfL "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz" -o gitleaks.tar.gz
           tar -xzf gitleaks.tar.gz
           sudo mv gitleaks /usr/local/bin/
 
       - name: Run Gitleaks
-        run: gitleaks detect --source . --verbose --redact
+        run: gitleaks git . --verbose --redact
 
   credential-pattern-scan:
     name: Custom Credential Pattern Scan
